@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>S.I.G.S.M. - Panel de Ambulancias</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header class="barra-superior">
+        <div class="marca">
+            <h2>S.I.G.S.M.</h2>
+            <span>Hospital de Clínicas</span>
+        </div>
+        <div class="usuario">
+            <span>Usuario: Central Piso 6</span>
+        </div>
+    </header>
+    <div class="contenedor-principal">
+        <h1>Monitoreo General de la Flota</h1>
+        <div class="seccion-tarjetas">
+            <div class="tarjeta disponible">
+                <h3>Móviles Disponibles</h3>
+                <p class="numero">4</p>
+            </div>
+            <div class="tarjeta viaje">
+                <h3>En Traslado Activo</h3>
+                <p class="numero">2</p>
+            </div>
+        </div>
+        <div class="seccion-tabla">
+            <h3>Estado de Unidades</h3>
+            <table class="tabla-ambulancias">
+                <thead>
+                    <tr>
+                        <th>Móvil ID</th>
+                        <th>Chofer Asignado</th>
+                        <th>Destino / Servicio</th>
+                        <th>Estado Actual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ambulancia 01</td>
+                        <td>Carlos Rodríguez</td>
+                        <td>Urgencias - Piso 1</td>
+                        <td><span class="texto-viaje">En Camino</span></td>
+                    </tr>
+                    <tr>
+                        <td>Ambulancia 02</td>
+                        <td>Juan Pérez</td>
+                        <td>Traslado Externo</td>
+                        <td><span class="texto-viaje">En Camino</span></td>
+                    </tr>
+                    <tr>
+                        <td>Ambulancia 03</td>
+                        <td>María Espósito</td>
+                        <td>Base Central</td>
+                        <td><span class="texto-disponible">Disponible</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

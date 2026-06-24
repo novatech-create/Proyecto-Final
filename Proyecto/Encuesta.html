@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>S.I.G.S.M. - Encuesta</title>
+    <link rel="stylesheet" href="encuesta.css">
+</head>
+<body>
+    <header class="barra-superior">
+        <h2>S.I.G.S.M.</h2>
+        <span>Hospital de Clínicas</span>
+    </header>
+    <div class="contenedor-encuesta">
+        <h1>Encuesta de Servicio</h1>
+        <p>Su opinión es anónima y nos ayuda a mejorar el sistema de traslados.</p>
+        <form action="#" method="POST">
+            <div class="pregunta">
+                <p><strong>1. ¿Cómo califica la puntualidad de la ambulancia?</strong></p>
+                <label><input type="radio" name="p1" value="excelente"> Excelente</label>
+                <label><input type="radio" name="p1" value="bueno"> Bueno</label>
+                <label><input type="radio" name="p1" value="regular"> Regular</label>
+            </div>
+            <div class="pregunta">
+                <p><strong>2. ¿Cómo fue la atención del personal médico?</strong></p>
+                <label><input type="radio" name="p2" value="excelente"> Excelente</label>
+                <label><input type="radio" name="p2" value="bueno"> Bueno</label>
+                <label><input type="radio" name="p2" value="regular"> Regular</label>
+            </div>
+            <div class="pregunta">
+                <p><strong>3. Comentarios o sugerencias:</strong></p>
+                <textarea name="comentarios" rows="4" placeholder="Escriba aquí..."></textarea>
+            </div>
+            <button type="submit" class="btn-enviar">Enviar Encuesta</button>
+        </form>
+    </div>
+</body>
+</html>

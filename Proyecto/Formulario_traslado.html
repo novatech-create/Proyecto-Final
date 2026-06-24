@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Traslado</title>
+    <link rel="stylesheet" href="formulario_traslado.css">
+</head>
+<body>
+    <header class="barra-superior">
+        <div class="marca">
+            <h2>S.I.G.S.M.</h2>
+            <span>Hospital de Clínicas</span>
+        </div>
+    </header>
+    <div class="contenedor-formulario">
+        <h1>Registrar Nuevo Traslado</h1>
+        <form action="#" method="POST">
+            <label for="movil">Seleccionar Ambulancia:</label>
+            <select id="movil" name="movil">
+                <option value="01">Ambulancia 01</option>
+                <option value="02">Ambulancia 02</option>
+                <option value="03">Ambulancia 03</option>
+            </select>
+            <label for="destino">Piso / Destino de Urgencia:</label>
+            <input type="text" id="destino" name="destino" placeholder="piso 6">
+            <label for="prioridad">Nivel de Prioridad:</label>
+            <select id="prioridad" name="prioridad">
+                <option value="baja">Baja (Traslado Común)</option>
+                <option value="media">Media (Urgencia)</option>
+                <option value="alta">Alta (Emergencia)</option>
+            </select>
+            <button type="submit" class="btn-enviar">Asignar y Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
