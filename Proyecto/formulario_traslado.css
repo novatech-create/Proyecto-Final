@@ -1,66 +1,67 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f6;
-    margin: 0;
-    padding: 0;
-}
-
-.barra-superior {
-    background-color: #003d82;
-    color: #ffffff;
-    padding: 15px 20px;
-    border-bottom: 3px solid #85b5e1;
-}
-
-.marca h2 { margin: 0; font-size: 1.3rem; }
-.marca span { font-size: 0.8rem; color: #e6f0fa; }
+/* Estilos propios de la pantalla Registrar Traslado 
+(header, nav y footer están en compartido.css) */
 
 .contenedor-formulario {
-    background-color: #ffffff;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 25px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
+    width: 90%;
+    max-width: 650px;
+    margin: 20px auto 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
 }
-
-h1 {
+.contenedor-formulario form {
+    display: flex;
+    flex-direction: column;
+}
+.subtitulo-form {
     color: #003d82;
-    font-size: 1.5rem;
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e6e6e6;
 }
-
-label {
-    display: block;
-    margin-bottom: 5px;
+.contenedor-formulario label {
     font-weight: bold;
-    color: #333333;
-    font-size: 0.9rem;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
-input[type="text"], select {
-    display: block;
-    width: 100%;
+.contenedor-formulario input {
     padding: 10px;
-    margin-bottom: 18px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 }
-
+.contenedor-formulario select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.contenedor-formulario textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
 .btn-enviar {
-    display: block;
-    width: 100%;
-    background-color: #0056b3;
+    display: inline-block;
+    text-align: center;
+    margin-top: 25px;
+    background: #003d82;
     color: white;
+    text-decoration: none;
     padding: 12px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
 }
-
 .btn-enviar:hover {
-    background-color: #003d82;
+    background: #002c5d;
+}
+@media (max-width: 768px) {
+    .contenedor-formulario {
+        padding: 20px;
+    }
 }

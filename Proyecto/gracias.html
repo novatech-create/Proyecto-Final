@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Ingreso</title>
+    <title>S.I.G.S.M. - Encuesta Enviada</title>
     <link rel="stylesheet" href="compartido.css">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="gracias.css">
 </head>
 <body>
-    <!-- Barra superior: sin usuario logueado todavía, no lleva menú -->
+    <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
             <img src="imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
@@ -17,25 +17,30 @@
                 <p>Sistema Informático de Gestión de Servicios Médicos</p>
             </div>
         </div>
+        <div class="info-usuario">
+            <a href="login.html" class="btn-login">Iniciar Sesión</a>
+        </div>
     </header>
+    <!-- Menú principal -->
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="index_funcionarios.html">Inicio</a></li>
+            <li><a href="documentos.html">Documentos</a></li>
+            <li><a href="encuesta.html">Encuesta</a></li>
+            <li><a href="respuestas_encuestas.html">Respuestas</a></li>
+            <li><a href="modulo_ambulancias.html">Ambulancias</a></li>
+        </ul>
+    </nav>
     <!-- Contenido -->
-    <main class="contenedor-login">
-        <h2>Iniciar Sesión</h2>
-        <p class="subtitulo">Hospital de Clínicas</p>
-        <form action="#" method="POST">
-
-            <label for="usuario">Documento:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" required>
-
-            <label for="clave">Contraseña:</label>
-            <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
-
-            <!-- Prototipo: el login real y la definición del rol (admin/funcionario) -->
-            <!-- se hará en el backend con PHP, validando usuario y contraseña -->
-            <a href="index_funcionarios.html" class="btn-ingresar">INGRESAR</a>
-
-        </form>
+    <main class="contenedor-principal">
+        <div class="agradecer">
+                    <h2>¡Gracias por completar la encuesta!</h2>
+            <p>Sus respuestas fueron enviadas correctamente.</p>
+            <p>Agradecemos su colaboración para mejorar la calidad de los servicios brindados por el Hospital de Clínicas.</p>
+            <a href="index_pacientes.html" class="btn-volver">Volver al inicio</a>
+        </div>
     </main>
+
     <!-- Footer -->
     <footer class="pie-pagina">
         <div class="contenido-footer">

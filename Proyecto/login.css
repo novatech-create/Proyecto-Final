@@ -1,50 +1,54 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e6f0fa;
-    color: #1a1a1a; 
-    padding-top: 100px;
-}
-
-.caja-login {
-    background-color: #ffffff;
-    width: 350px;
-    margin: 0 auto;
+/* Estilos propios de la pantalla de Login 
+(header, nav y footer están en compartido.css) */
+.contenedor-login {
+    width: 90%;
+    max-width: 400px;
+    margin: 60px auto;
+    background: white;
     padding: 30px;
-    border: 3px solid #0056b3;
+    border-radius: 8px;
     text-align: center;
 }
-
-.subtitulo {
-    color: #555555;
-    font-size: 0.9rem;
-    margin-bottom: 25px;
-}
-
-.campo {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-.campo label {
-    display: block;
-    font-weight: bold;
+.contenedor-login h2 {
+    color: #003d82;
     margin-bottom: 5px;
 }
 
-.campo input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    box-sizing: border-box;
+.contenedor-login .subtitulo {
+    color: #666;
+    margin-bottom: 25px;
+}
+.contenedor-login form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 5px;
+}
+.contenedor-login label {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
 }
 
-.boton-azul {
-    width: 100%;
+.contenedor-login input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.btn-ingresar,
+.boton-ingresar {
+    margin-top: 20px;
+    background: #003d82;
+    color: white;
+    text-align: center;
+    text-decoration: none;
     padding: 12px;
-    background-color: #0056b3;
-    color: #ffffff;
+    border-radius: 5px;
     font-weight: bold;
-    border: none;
     cursor: pointer;
-    margin-top: 10px;
+}
+.btn-ingresar:hover,
+.boton-ingresar:hover {
+    background: #002c5d;
 }

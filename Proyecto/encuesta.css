@@ -1,69 +1,46 @@
-body {
-    font-family: sans-serif;
-    background-color: #f0f0f0;
-    color: #333333;
-    margin: 0;
-    padding: 0;
-}
-
-.barra-superior {
-    background-color: #003d82;
-    color: #ffffff;
-    padding: 10px 20px;
-}
-
-.barra-superior h2 {
-    margin: 0;
-}
+/* Estilos propios de la pantalla Encuesta 
+(header, nav y footer están en compartido.css) */
 
 .contenedor-encuesta {
-    background-color: #ffffff;
-    max-width: 450px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #cccccc;
-}
-
-h1 {
-    color: #003d82;
-    margin-top: 0;
-    font-size: 1.4rem;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
 }
 
 .pregunta {
     margin-bottom: 20px;
-    border-bottom: 1px solid #eeeeee;
-    padding-bottom: 15px;
 }
 
 .pregunta p {
-    margin-top: 0;
     margin-bottom: 10px;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    cursor: pointer;
+.pregunta select,.pregunta textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
-textarea {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #cccccc;
-    box-sizing: border-box;
-    resize: none;
+.pregunta label {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 8px;
+    font-size: 14px;
 }
 
 .btn-enviar {
-    display: block;
-    width: 100%;
-    background-color: #0056b3;
-    color: #ffffff;
-    padding: 12px;
-    border: none;
-    font-size: 1rem;
+    display: inline-block;
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn-enviar:hover {
+    background: #002c5d;
 }

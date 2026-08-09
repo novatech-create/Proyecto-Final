@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Traslados Activos</title>
+    <title>S.I.G.S.M. - Panel de Ambulancias</title>
     <link rel="stylesheet" href="compartido.css">
-    <link rel="stylesheet" href="panel_traslados.css">
+    <link rel="stylesheet" href="modulo_ambulancias.css">
 </head>
 <body>
     <!-- Barra superior -->
@@ -22,6 +22,7 @@
             <a href="login.html" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
+
     <!-- Menú principal -->
     <nav class="menu-principal">
         <ul>
@@ -34,53 +35,61 @@
     </nav>
     <!-- Contenido -->
     <main class="contenedor-principal">
-        <section class="titulo">
-            <h2>Traslados Activos</h2>
-            <p>Seguimiento del estado de cada traslado en curso.</p>
-        </section>
+        <div class="ambulancias-header">
+            <h2>Monitoreo General de la Flota</h2>
+            <a href="formulario_traslado.html" class="btn-nuevo-traslado">+ Nuevo Traslado</a>
+        </div>
         <section class="estadisticas">
             <div class="tarjeta">
-                <h3>3</h3>
-                <p>Total activos</p>
+                <h3>4</h3>
+                <p>Móviles disponibles</p>
             </div>
             <div class="tarjeta">
-                <h3>1</h3>
-                <p>Prioridad alta</p>
-            </div>
-            <div class="tarjeta">
-                <h3>08:45</h3>
-                <p>Última actualización</p>
+                <h3>2</h3>
+                <p>En traslado activo</p>
             </div>
         </section>
-        <section class="lista-traslados">
-            <div class="tarjeta-traslado alta">
-                <h3>Ambulancia 01</h3>
-                <p><strong>Destino:</strong> Piso 2 - Sala 4</p>
-                <p><strong>Paciente:</strong> Martín Fernández</p>
-                <p><strong>Hora:</strong> 08:50</p>
-                <button type="button" class="btn-accion">Gestionar</button>
-            </div>
-
-            <div class="tarjeta-traslado media">
-                <h3>Ambulancia 03</h3>
-                <p><strong>Destino:</strong> Tomografía</p>
-                <p><strong>Paciente:</strong> Ana López</p>
-                <p><strong>Hora:</strong> 09:10</p>
-                <button type="button" class="btn-accion">Gestionar</button>
-            </div>
-
-            <div class="tarjeta-traslado baja">
-                <h3>Ambulancia 02</h3>
-                <p><strong>Destino:</strong> Alta médica - Domicilio</p>
-                <p><strong>Paciente:</strong> Laura Pérez</p>
-                <p><strong>Hora:</strong> 09:40</p>
-                <button type="button" class="btn-accion">Gestionar</button>
-            </div>
-
+        <section class="tabla-respuestas">
+            <h3>Estado de Unidades</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Móvil ID</th>
+                        <th>Chofer Asignado</th>
+                        <th>Destino / Servicio</th>
+                        <th>Estado Actual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ambulancia 01</td>
+                        <td>Carlos Rodríguez</td>
+                        <td>Urgencias - Piso 1</td>
+                        <td><span class="estado en-camino">En Camino</span></td>
+                    </tr>
+                    <tr>
+                        <td>Ambulancia 02</td>
+                        <td>Juan Pérez</td>
+                        <td>Traslado Externo</td>
+                        <td><span class="estado en-camino">En Camino</span></td>
+                    </tr>
+                    <tr>
+                        <td>Ambulancia 03</td>
+                        <td>María Espósito</td>
+                        <td>Base Central</td>
+                        <td><span class="estado disponible">Disponible</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
-
+        <section class="acceso-rapido">
+            <a href="panel_traslados.html" class="tarjeta-rapida">
+                <span class="icono">🚦</span>
+                <h4>Traslados Activos</h4>
+                <p>Ver panel de traslados en curso</p>
+            </a>
+        </section>
     </main>
-
     <!-- Footer -->
     <footer class="pie-pagina">
         <div class="contenido-footer">
