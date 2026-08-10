@@ -23,22 +23,22 @@ S.I.G.S.M. es un sistema web desarrollado para el **Hospital de Clínicas** que 
 - **Servidor:** Apache (Ubuntu Server)
 - **Control de versiones:** Git / GitHub
 
-# Estructura del repositorio
+# Estructura actual del repositorio
 
-Proyecto-HospitalDeClinicas/
+Proyecto-Final/
 |
 |-> docs/    # Documentación por entrega
 |   |-> primera-entrega/
 |
 |-> src/  # Código fuente
+|   |-> autenticacion/
+|   |-> imagenes/
 |   |-> modulo-documentacion/
-|   │   |-> PanelAdmin/     # Panel de administración
-|   │   |-> QR/             # Vista accesible por QR
-|   │   |-> Encuestas/      # Formulario de encuesta y confirmación
+|   │   |-> documentos/    # Panel de administración de documentos
+|   │   |-> encuestas/      # Formulario de encuesta y confirmación
 |   |-> modulo-ambulancias/
-|       |-> Gestión de Traslados/      # Panel de gestión de traslados
-|       |-> Formulario de Traslado/    # Alta de nuevo traslado
-|       |-> Seguimiento/               # Seguimiento de estado
+|       |-> gestion-traslados/      # Panel de gestión de traslados
+|       |-> registro-traslados/    # Alta de nuevo traslado
 |
 |-> database/   # Scripts SQL
 |
