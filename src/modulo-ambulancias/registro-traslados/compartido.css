@@ -1,0 +1,207 @@
+/*Estilos compartidos por todas las pantallas del sistema:
+header, menú de navegación y footer.
+Cada pantalla tiene además su propio CSS con los estilos específicos.
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    color: #333;
+}
+
+/*Header*/
+
+.barra-superior {
+    background: #003d82;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-hc {
+    width: 60px;
+    background: white;
+    padding: 4px;
+    border-radius: 5px;
+}
+
+.titulo-header h1 {
+    font-size: 24px;
+}
+
+.titulo-header p {
+    font-size: 14px;
+}
+
+.info-usuario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-usuario span {
+    font-size: 14px;
+}
+
+
+/* Botones*/
+
+.btn-login,
+.btn-logout,
+.btn-ingresar,
+.boton-cerrar-sesion,
+.boton-ingresar {
+    background: white;
+    color: #003d82;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+.btn-login:hover,
+.btn-logout:hover,
+.btn-ingresar:hover,
+.boton-cerrar-sesion:hover,
+.boton-ingresar:hover {
+    background: #e6e6e6;
+}
+
+
+/*Menu principal*/
+
+.menu-principal {
+    background: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu-principal ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.menu-principal a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.menu-principal a:hover,
+.menu-principal .activo {
+    background: #003d82;
+    color: white;
+}
+
+
+/* Contenedor principal y título de la página */
+
+.contenedor-principal {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+.titulo-pagina,
+.titulo {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.titulo-pagina h2,
+.titulo h2 {
+    color: #003d82;
+    margin-bottom: 10px;
+}
+
+
+/*Footer*/
+
+.pie-pagina {
+    background: #003d82;
+    color: white;
+    margin-top: 40px;
+}
+
+.contenido-footer,
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.contenido-footer h4,
+.footer-content h4 {
+    margin-bottom: 8px;
+}
+
+.contenido-footer p,
+.footer-content p {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.copyright-footer,
+.footer-copyright {
+    text-align: center;
+    background: #002c5d;
+    padding: 15px;
+    font-size: 13px;
+}
+
+
+/*Diseño responsivo */
+
+@media (max-width: 768px) {
+
+    .barra-superior {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .titulo-header h1 {
+        font-size: 20px;
+    }
+
+    .menu-principal ul {
+        flex-direction: column;
+    }
+
+    .menu-principal a {
+        padding: 12px;
+    }
+
+    .contenedor-principal {
+        width: 95%;
+    }
+
+    .contenido-footer,
+    .footer-content {
+        flex-direction: column;
+    }
+
+}

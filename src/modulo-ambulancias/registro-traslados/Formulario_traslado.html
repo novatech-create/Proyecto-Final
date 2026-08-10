@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
     <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
-            <img src="imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
             <div class="titulo-header">
                 <h1>S.I.G.S.M.</h1>
                 <p>Sistema Informático de Gestión de Servicios Médicos</p>
@@ -19,18 +19,18 @@
         </div>
         <div class="info-usuario">
             <span>Usuario: Administrativo</span>
-            <a href="login.html" class="btn-logout">Cerrar Sesión</a>
+            <a href="../../autenticacion/Login.html" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
 
     <!-- Menú principal -->
     <nav class="menu-principal">
         <ul>
-            <li><a href="index_funcionarios.html">Inicio</a></li>
-            <li><a href="documentos.html">Documentos</a></li>
-            <li><a href="encuesta.html">Encuesta</a></li>
-            <li><a href="respuestas_encuestas.html">Respuestas</a></li>
-            <li><a href="modulo_ambulancias.html" class="activo">Ambulancias</a></li>
+            <li><a href="../../autenticacion/index_funcionarios.html">Inicio</a></li>
+            <li><a href="../../modulo-documentacion/documentos/Gestión_de_Documentación.html">Documentos</a></li>
+            <li><a href="../../modulo-documentacion/encuestas/Encuesta.html">Encuesta</a></li>
+            <li><a href="../../modulo-documentacion/encuestas/respuestas_encuestas.html">Respuestas</a></li>
+            <li><a href="../gestion-traslados/Monitoreo_General_Ambulancias.html" class="activo">Ambulancias</a></li>
         </ul>
     </nav>
     <!-- Contenido -->
@@ -96,7 +96,7 @@
                 <label for="observaciones">Observaciones:</label>
                 <textarea id="observaciones" name="observaciones" rows="3" placeholder="Datos adicionales del traslado"></textarea>
                 <!-- Prototipo: el guardado real se hará con PHP; por ahora lleva al panel de traslados -->
-                <a href="panel_traslados.html" class="btn-enviar">Asignar y Enviar</a>
+                <a href="Panel_traslados_activos.html" class="btn-enviar">Asignar y Enviar</a>
             </form>
         </section>
     </main>
@@ -119,3 +119,5 @@
     </footer>
 </body>
 </html>
+
+
