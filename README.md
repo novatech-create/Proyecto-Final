@@ -20,7 +20,7 @@ S.I.G.S.M. es un sistema web desarrollado para el **Hospital de Clínicas** que 
 - **Frontend:** HTML5, CSS3 (Flexbox y Grid)
 - **Backend:** PHP 8.x
 - **Base de datos:** MySQL
-- **Servidor:** Apache (Ubuntu Server)
+- **Servidor:** Rocky Linux 9.7
 - **Control de versiones:** Git / GitHub
 
 # Estructura del repositorio
@@ -82,7 +82,7 @@ Todos los commits deben seguir el siguiente formato:
 > La documentación completa de instalación del entorno se encuentra en docs/Configuración del Entorno de Desarrollo/.
 
 # Requisitos
-- Ubuntu Server 24.04
+- Rocky Linux 9.7
 - Apache 2.x
 - PHP 8.x
 - MySQL
