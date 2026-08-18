@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Ingreso</title>
+    <title>S.I.G.S.M. - Inicio Funcionario</title>
     <link rel="stylesheet" href="compartido.css">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="inicio_funcionario_de_Documentacion.css">
 </head>
 <body>
-    <!-- Barra superior: sin usuario logueado todaví­a, no lleva menÃº -->
+    <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
             <img src="../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
@@ -17,24 +17,32 @@
                 <p>Sistema Informático de Gestión de Servicios Médicos</p>
             </div>
         </div>
+        <div class="info-usuario">
+            <span>Usuario: Funcionario</span>
+            <a href="Login.html" class="btn-logout">Cerrar Sesión</a>
+        </div>
     </header>
     <!-- Contenido -->
-    <main class="contenedor-login">
-        <h2>Iniciar Sesión</h2>
-        <p class="subtitulo">Hospital de Clínicas</p>
-        <form action="#" method="POST">
+    <main class="contenedor-principal">
+        <section class="bienvenida">
+            <h2 class="centrado">Bienvenido Funcionario/a "Insertar Nombre"</h2>
+        </section>
+        <section class="acceso-rapido">
+            <h3 class="centrado">Acceso Rápido</h3>
+            <div class="tarjetas-rapidas">
+                <a href="../modulo-documentacion/Funcionarios/documentos/Gestión_de_Documentación.html" class="tarjeta-rapida">
+                    <span class="icono"></span>
+                    <h4>Documentos</h4>
+                    <p>Gestión de documentación</p>
+                </a>
+                <a href="../modulo-documentacion/Funcionarios/encuestas/respuestas_encuestas.html" class="tarjeta-rapida">
+                    <span class="icono"></span>
+                    <h4>Respuestas</h4>
+                    <p>Ver respuestas de encuestas</p>
+                </a>
+            </div>
+        </section>
 
-            <label for="usuario">Documento:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" required>
-
-            <label for="clave">Contraseña:</label>
-            <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
-
-            <!-- Prototipo: el login real y la definición del rol (admin/funcionario) -->
-            <!-- se hará en el backend con PHP, validando usuario y contraseña -->
-            <a href="index_funcionarios.html" class="btn-ingresar">INGRESAR</a>
-
-        </form>
     </main>
     <!-- Footer -->
     <footer class="pie-pagina">
@@ -55,3 +63,6 @@
     </footer>
 </body>
 </html>
+
+
+
