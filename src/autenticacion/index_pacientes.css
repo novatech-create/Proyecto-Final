@@ -1,0 +1,53 @@
+/* Estilos propios de la pantalla Inicio Paciente 
+(header, nav y footer están en compartido.css) */
+
+.bienvenida {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+
+.bienvenida h2 {
+    color: #003d82;
+    margin-bottom: 20px;
+}
+.bienvenida p {
+    line-height: 1.5;
+    color: #555;
+}
+.acceso-rapido h3 {
+    color: #003d82;
+    margin-bottom: 15px;
+}
+.tarjetas-rapidas {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-rapida {
+    flex: 1;
+    min-width: 200px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+}
+.tarjeta-rapida:hover {
+    border-color: #003d82;
+}
+.tarjeta-rapida .icono {
+    font-size: 30px;
+}
+.tarjeta-rapida h4 {
+    color: #003d82;
+    margin: 10px 0 5px;
+}
+.tarjeta-rapida p {
+    font-size: 14px;
+}

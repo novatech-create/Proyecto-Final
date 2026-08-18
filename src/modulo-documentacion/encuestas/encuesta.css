@@ -1,0 +1,46 @@
+/* Estilos propios de la pantalla Encuesta 
+(header, nav y footer están en compartido.css) */
+
+.contenedor-encuesta {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+.pregunta {
+    margin-bottom: 20px;
+}
+
+.pregunta p {
+    margin-bottom: 10px;
+}
+
+.pregunta select,.pregunta textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.pregunta label {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.btn-enviar {
+    display: inline-block;
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-enviar:hover {
+    background: #002c5d;
+}
