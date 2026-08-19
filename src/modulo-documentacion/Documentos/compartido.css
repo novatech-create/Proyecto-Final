@@ -113,6 +113,21 @@ Se usa flex para distribuir el logo, nombre del sistema y la información del us
     background: #e6e6e6;
 }
 
+.btn-enviar {
+    display: inline-block;
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-enviar:hover {
+    background: #002c5d;
+}
+
 /*
 (Menú principal del sistema) Se muestra como una barra horizontal con enlaces que 
 cambian de color al pasar el mouse o cuando están activos.
