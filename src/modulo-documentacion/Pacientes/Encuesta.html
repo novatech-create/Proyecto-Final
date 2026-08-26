@@ -6,6 +6,7 @@
     <title>S.I.G.S.M. - Encuesta</title>
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="encuesta.css">
+    <script src="encuesta.js" defer></script>
 </head>
 <body>
 
@@ -33,11 +34,11 @@
         </section>
 
         <section class="contenedor-encuesta">
-            <form action="#" method="POST">
+            <form id="formularioEncuesta">
 
                 <div class="pregunta">
                     <p><strong>1. Servicio consultado</strong></p>
-                    <select name="servicio" required>
+                    <select name="servicio" id="campoServicio" required>
                         <option value="">Seleccione un servicio...</option>
                         <option>Cardiología</option>
                         <option>Nefrología</option>
@@ -77,11 +78,12 @@
 
                 <div class="pregunta">
                     <p><strong>5. Comentarios o sugerencias</strong></p>
-                    <textarea name="comentarios" rows="5" placeholder="Escriba aquí su comentario..."></textarea>
+                    <textarea name="comentarios" id="campoComentarios" rows="5" placeholder="Escriba aquí su comentario..."></textarea>
                 </div>
 
-                <!-- Prototipo: el envío real se hará con PHP; por ahora lleva a la pantalla de agradecimiento -->
-                <a href="gracias_por_encuesta.html" class="btn-enviar">Enviar Encuesta</a>
+                <p id="mensajeErrorEncuesta" class="mensaje-error" role="alert"></p>
+
+                <button type="submit" id="botonEnviarEncuesta" class="btn-enviar">Enviar Encuesta</button>
 
             </form>
         </section>

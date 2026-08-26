@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="documento.css">
     <title>S.I.G.S.M. - Documento</title>
+    <script src="documento.js" defer></script>
 </head>
 <body>
     <!-- Barra superior -->
@@ -21,17 +22,18 @@
     </header>
     <!-- Contenido -->
     <main>
-    <div class="doc-card">
+    <p id="estadoDocumento" class="estado-carga">Cargando documento...</p>
+    <div class="doc-card oculto" id="tarjetaDocumento">
       <div class="doc-categoria">
-        <span class="badge badge-cat">Categoría</span>
+        <span class="badge badge-cat" id="docCategoria">Categoría</span>
       </div>
-      <h1 class="doc-titulo">TituloDocumento</h1>
-      <p class="doc-descripcion">
+      <h1 class="doc-titulo" id="docTitulo">TituloDocumento</h1>
+      <p class="doc-descripcion" id="docDescripcion">
         InformacionDocumento
       </p>
       <div class="doc-meta">
-        <span>📅 Actualizado: Fecha</span>
-        <span>📄 PDF · Peso</span>
+        <span id="docFecha">📅 Actualizado: Fecha</span>
+        <span id="docPeso">📄 PDF · Peso</span>
       </div>
     </div>
     <div class="acciones-doc">
@@ -45,7 +47,7 @@
         <small>El PDF se mostrará aquí</small>
       </div>
     </div>
-    <a href="../Pacientes/Encuesta.html" class="btn-enviar encuesta-banner">
+    <a href="../Pacientes/Encuesta.html" id="enlaceEncuesta" class="btn-enviar encuesta-banner">
       <div class="encuesta-banner-texto">
         <strong>¿Fue útil este documento?</strong> 
         <span>Completá una encuesta breve y ayudanos a mejorar</span>

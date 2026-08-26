@@ -6,6 +6,7 @@
     <title>S.I.G.S.M. - Ingreso</title>
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="index.css">
+    <script src="auth.js?v=20260826" defer></script>
 </head>
 <body>
     <!-- Barra superior: sin usuario logueado todaví­a, no lleva menú -->
@@ -22,7 +23,7 @@
     <main class="contenedor-login">
         <h2>Iniciar Sesión</h2>
         <p class="subtitulo">Hospital de Clínicas</p>
-        <form action="#" method="POST">
+        <form id="formularioLogin">
 
             <label for="usuario">Documento:</label>
             <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" required>
@@ -30,9 +31,9 @@
             <label for="clave">Contraseña:</label>
             <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
 
-            <!-- Prototipo: el login real y la definición del rol (admin/funcionario) -->
-            <!-- se hará en el backend con PHP, validando usuario y contraseña -->
-            <a href="inicio_funcionario_de_Documentacion.html" class="btn-ingresar">INGRESAR</a>
+            <p id="mensajeError" class="mensaje-error" role="alert"></p>
+
+            <button type="submit" id="botonIngresar" class="btn-ingresar">INGRESAR</button>
 
         </form>
     </main>

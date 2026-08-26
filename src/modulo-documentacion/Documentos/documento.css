@@ -206,3 +206,12 @@ footer p {
     padding: 32px 20px;
   }
 }
+/* Agregado para la conexión con la API */
+.oculto {
+    display: none;
+}
+.estado-carga {
+    text-align: center;
+    color: #6b7280;
+    margin: 1rem 0;
+}

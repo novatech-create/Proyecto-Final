@@ -6,6 +6,8 @@
     <title>S.I.G.S.M. - Respuestas de Encuestas</title>
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="respuestas_encuestas.css">
+    <script src="../../../autenticacion/sesion.js" defer></script>
+    <script src="respuestas.js" defer></script>
 </head>
 <body>
     <!-- Barra superior -->
@@ -18,8 +20,8 @@
             </div>
         </div>
         <div class="info-usuario">
-            <span>Usuario: "Nombre"</span>
-            <a href="../../../autenticacion/index.html" class="btn-logout">Cerrar Sesión</a>
+            <span id="nombreUsuario">Usuario: "Nombre"</span>
+            <a href="../../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
     <!-- Menú principal -->
@@ -36,17 +38,18 @@
             <h2>Respuestas de Encuestas</h2>
             <p>Visualización de las respuestas enviadas por los pacientes.</p>
         </section>
+        <p id="estadoEncuestas" class="estado-carga">Cargando respuestas...</p>
         <section class="estadisticas">
             <div class="tarjeta">
-                <h3>145</h3>
+                <h3 id="statTotal">-</h3>
                 <p>Encuestas recibidas</p>
             </div>
             <div class="tarjeta">
-                <h3>4.6 / 5</h3>
+                <h3 id="statPromedio">-</h3>
                 <p>Promedio de satisfacción</p>
             </div>
             <div class="tarjeta">
-                <h3>Cardiología</h3>
+                <h3 id="statServicioTop">-</h3>
                 <p>Servicio más consultado</p>
             </div>
         </section>
@@ -60,37 +63,7 @@
                         <th>Comentario</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>06/07/2026</td>
-                        <td>Cardiología</td>
-                        <td>Excelente</td>
-                        <td>Información muy clara.</td>
-                    </tr>
-                    <tr>
-                        <td>05/07/2026</td>
-                        <td>Nefrología</td>
-                        <td>Buena</td>
-                        <td>Muy útil.</td>
-                    </tr>
-                    <tr>
-                        <td>05/07/2026</td>
-                        <td>Imagenología</td>
-                        <td>Excelente</td>
-                        <td>Todo correcto.</td>
-                    </tr>
-                    <tr>
-                        <td>04/07/2026</td>
-                        <td>Urología</td>
-                        <td>Regular</td>
-                        <td>Podría tener más imágenes.</td>
-                    </tr>
-                    <tr>
-                        <td>03/07/2026</td>
-                        <td>Trasplantes</td>
-                        <td>Excelente</td>
-                        <td>Muy fácil de entender.</td>
-                    </tr>
+                <tbody id="cuerpoTablaRespuestas">
                 </tbody>
             </table>
         </section>

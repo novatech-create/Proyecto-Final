@@ -54,3 +54,9 @@ tr:hover {
     }
 
 }
+
+/* Agregado para la conexión con la API */
+.estado-carga {
+    color: #6b7280;
+    margin: 0.5rem 0 1rem;
+}

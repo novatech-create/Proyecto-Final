@@ -6,6 +6,8 @@
     <title>S.I.G.S.M. - Documentación</title>
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="Gestión_de_Documentación.css">
+    <script src="../../../autenticacion/sesion.js" defer></script>
+    <script src="documentos.js" defer></script>
 </head>
 <body>
 
@@ -19,8 +21,8 @@
             </div>
         </div>
         <div class="info-usuario">
-            <span>Usuario: "Nombre"</span>
-            <a href="../../../autenticacion/index.html" class="btn-logout">Cerrar Sesión</a>
+            <span id="nombreUsuario">Usuario: "Nombre"</span>
+            <a href="../../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
     <!-- Menú principal -->
@@ -37,85 +39,39 @@
         <div class="documentos-header">
             <h2>Gestión de Documentación</h2>
             <!-- Botón visible solo para administrador: alta de documentos -->
-            <a href="#" class="btn-nuevo-doc">+ Nuevo Documento</a>
+            <button type="button" id="botonNuevoDocumento" class="btn-nuevo-doc">+ Nuevo Documento</button>
         </div>
         <!-- Documentos por categoría: visible para todos los roles -->
-        <section class="categorias">
+        <p id="estadoDocumentos" class="estado-carga">Cargando documentos...</p>
+        <section class="categorias" id="contenedorCategorias"></section>
 
-            <div class="categoria">
-                <h3>Nefrología <span class="badge">3</span></h3>
-                <ul>
-                    <li>
-                        <span>Plan de alta enfermería</span>
-                        <span class="fecha">15/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                    <li>
-                        <span>Indicaciones ingreso a centro</span>
-                        <span class="fecha">10/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                    <li>
-                        <span>Indicaciones enfermería trasplantados</span>
-                        <span class="fecha">05/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                </ul>
-            </div>
+        <!-- Formulario de alta de documento (oculto hasta hacer clic en "+ Nuevo Documento") -->
+        <div id="modalNuevoDocumento" class="modal-documento oculto">
+            <form id="formularioNuevoDocumento" class="tarjeta-formulario">
+                <h3>Nuevo Documento</h3>
+                <label for="campoCategoria">Categoría</label>
+                <select id="campoCategoria" name="categoria_id" required></select>
 
-            <div class="categoria">
-                <h3>Cardiología <span class="badge">3</span></h3>
-                <ul>
-                    <li>
-                        <span>Ecocardiograma con dobutamina</span>
-                        <span class="fecha">12/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                    <li>
-                        <span>Ecocardiograma transesofágico</span>
-                        <span class="fecha">08/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                    <li>
-                        <span>Centellograma perfusión miocárdica</span>
-                        <span class="fecha">03/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="categoria">
-                <h3>Urología <span class="badge">1</span></h3>
-                <ul>
-                    <li>
-                        <span>Prostatectomía radical</span>
-                        <span class="fecha">14/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                </ul>
-            </div>
+                <label for="campoTitulo">Título</label>
+                <input type="text" id="campoTitulo" name="titulo" required>
 
-            <div class="categoria">
-                <h3>Trasplante <span class="badge">1</span></h3>
-                <ul>
-                    <li>
-                        <span>Prevención de infecciones</span>
-                        <span class="fecha">11/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                    <li>
-                </ul>
-            </div>
-            <div class="categoria">
-                <h3>Ostomía <span class="badge">1</span></h3>
-                <ul>
-                    <li>
-                        <span>Pauta para pacientes ostomizados</span>
-                        <span class="fecha">09/05/2026</span>
-                        <a href="#" class="btn-ver">Ver</a>
-                    </li>
-                </ul>
-            </div>
-        </section>
+                <label for="campoEspecialista">Especialista / servicio</label>
+                <input type="text" id="campoEspecialista" name="especialista" required>
+
+                <label for="campoDescripcion">Descripción / indicación</label>
+                <textarea id="campoDescripcion" name="descripcion" rows="3" required></textarea>
+
+                <label for="campoArchivoUrl">Enlace del archivo (opcional)</label>
+                <input type="text" id="campoArchivoUrl" name="archivo_url" placeholder="/archivos-ficticios/ejemplo.pdf">
+
+                <p id="mensajeFormularioDocumento" class="mensaje-error" role="alert"></p>
+
+                <div class="acciones-formulario">
+                    <button type="button" id="botonCancelarDocumento" class="btn-secundario">Cancelar</button>
+                    <button type="submit" id="botonGuardarDocumento" class="btn-primario">Guardar</button>
+                </div>
+            </form>
+        </div>
     </main>
     <!-- Footer -->
     <footer class="pie-pagina">

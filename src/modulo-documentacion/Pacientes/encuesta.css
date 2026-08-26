@@ -44,3 +44,14 @@
 .btn-enviar:hover {
     background: #002c5d;
 }
+
+/* Agregado para la conexión con la API */
+.mensaje-error {
+    display: none;
+    color: #b3261e;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0;
+}
+.mensaje-error.visible {
+    display: block;
+}

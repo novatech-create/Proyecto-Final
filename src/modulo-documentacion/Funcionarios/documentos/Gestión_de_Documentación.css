@@ -89,3 +89,58 @@
     background: #003d82;
     color: white;
 }
+
+/* --- Agregado para la conexión con la API --- */
+.estado-carga {
+    color: #6b7280;
+    margin: 0.5rem 0 1rem;
+}
+.modal-documento {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+.modal-documento.oculto {
+    display: none;
+}
+.tarjeta-formulario {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: min(480px, 90vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.tarjeta-formulario label {
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+.tarjeta-formulario input,
+.tarjeta-formulario select,
+.tarjeta-formulario textarea {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font: inherit;
+}
+.acciones-formulario {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+.mensaje-error {
+    display: none;
+    color: #b3261e;
+    font-size: 0.9rem;
+}
+.mensaje-error.visible {
+    display: block;
+}
