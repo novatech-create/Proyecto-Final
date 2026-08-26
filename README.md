@@ -31,16 +31,19 @@ Proyecto-HospitalDeClinicas/
 |   |-> primera-entrega/
 |
 |-> src/  # Código fuente
-|   |-> modulo-documentacion/
-|   │   |-> PanelAdmin/     # Panel de administración
-|   │   |-> QR/             # Vista accesible por QR
-|   │   |-> Encuestas/      # Formulario de encuesta y confirmación
-|   |-> modulo-ambulancias/
-|       |-> Gestión de Traslados/      # Panel de gestión de traslados
-|       |-> Formulario de Traslado/    # Alta de nuevo traslado
-|       |-> Seguimiento/               # Seguimiento de estado
-|
+|  |->sigsm/
+|     |
+|     |-> modulo-documentacion/
+|     |   |-> PanelAdmin/     # Panel de administración
+|     |   |-> QR/             # Vista accesible por QR
+|     |   |-> Encuestas/      # Formulario de encuesta y confirmación
+|     |-> modulo-ambulancias/
+|         |-> Gestión de Traslados/      # Panel de gestión de traslados
+|         |-> Formulario de Traslado/    # Alta de nuevo traslado
+|         |-> Seguimiento/               # Seguimiento de estado
+| 
 |-> database/   # Scripts SQL
+|   |-> BDProyecto.sql
 |
 |-> README.md
 
