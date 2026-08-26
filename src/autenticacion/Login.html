@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Ingreso</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <!-- Barra superior: sin usuario logueado todaví­a, no lleva menÃº -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+    </header>
+    <!-- Contenido -->
+    <main class="contenedor-login">
+        <h2>Iniciar Sesión</h2>
+        <p class="subtitulo">Hospital de Clínicas</p>
+        <form action="#" method="POST">
+
+            <label for="usuario">Documento:</label>
+            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" required>
+
+            <label for="clave">Contraseña:</label>
+            <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
+
+            <!-- Prototipo: el login real y la definición del rol (admin/funcionario) -->
+            <!-- se hará en el backend con PHP, validando usuario y contraseña -->
+            <a href="index_funcionarios.html" class="btn-ingresar">INGRESAR</a>
+
+        </form>
+    </main>
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="informacion-footer">
+                <h4>S.I.G.S.M.</h4>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+                <p>Hospital de Clínicas - Montevideo, Uruguay</p>
+            </div>
+            <div class="datos-proyecto-footer">
+                <h4>Proyecto de Egreso 2026</h4>
+                <p>BT - Tecnologías de la Información</p>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <p>© 2026 - S.I.G.S.M. - Hospital de Clínicas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

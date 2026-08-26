@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Inicio Paciente</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="index_pacientes.css">
+</head>
+<body>
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+        <div class="info-usuario">
+            <a href="Login.html" class="btn-login">Iniciar Sesión</a>
+        </div>
+    </header>
+    <!-- Menú: paciente solo ve Inicio, Documentos y Encuesta -->
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="index_pacientes.html" class="activo">Inicio</a></li>
+            <li><a href="../modulo-documentacion/documentos/Gestión_de_Documentación.html">Documentos</a></li>
+            <li><a href="../modulo-documentacion/encuestas/Encuesta.html">Encuesta</a></li>
+        </ul>
+    </nav>
+    <!-- Contenido -->
+    <main class="contenedor-principal">
+        <section class="bienvenida">
+            <h2>Bienvenido</h2>
+            <p>Acceda a los documentos y complete la encuesta desde aquí.</p>
+        </section>
+        <section class="acceso-rapido">
+            <h3>Acceso Rápido</h3>
+            <div class="tarjetas-rapidas">
+                <a href="../modulo-documentacion/documentos/Gestión_de_Documentación.html" class="tarjeta-rapida">
+                    <span class="icono"></span>
+                    <h4>Documentos</h4>
+                    <p>Ver documentación por categoría</p>
+                </a>
+                <a href="../modulo-documentacion/encuestas/Encuesta.html" class="tarjeta-rapida">
+                    <span class="icono"></span>
+                    <h4>Encuesta</h4>
+                    <p>Responder encuesta de satisfacción</p>
+                </a>
+                <!-- Acceso administrativo: no es parte del rol paciente, se deja visible en el prototipo -->
+                <a href="Login.html" class="tarjeta-rapida">
+                    <span class="icono"></span>
+                    <h4>Iniciar Sesión</h4>
+                    <p>Acceso administrativo</p>
+                </a>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="informacion-footer">
+                <h4>S.I.G.S.M.</h4>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+                <p>Hospital de Clínicas - Montevideo, Uruguay</p>
+            </div>
+            <div class="datos-proyecto-footer">
+                <h4>Proyecto de Egreso 2026</h4>
+                <p>BT - Tecnologías de la Información</p>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <p>© 2026 - S.I.G.S.M. - Hospital de Clínicas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+

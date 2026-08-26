@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Documentación</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="Gestión_de_Documentación.css">
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+        <div class="info-usuario">
+            <a href="../../autenticacion/Login.html" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+    <!-- Menú principal -->
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="../../autenticacion/index_funcionarios.html">Inicio</a></li>
+            <li><a href="Gestión_de_Documentación.html" class="activo">Documentos</a></li>
+            <li><a href="../encuestas/Encuesta.html">Encuesta</a></li>
+            <li><a href="../encuestas/respuestas_encuestas.html">Respuestas</a></li>
+            <li><a href="../../modulo-ambulancias/gestion-traslados/Monitoreo_General_Ambulancias.html">Ambulancias</a></li>
+        </ul>
+    </nav>
+    <!-- Contenido -->
+    <main class="contenedor-principal">
+
+        <div class="documentos-header">
+            <h2>Gestión de Documentación</h2>
+            <!-- Botón visible solo para administrador: alta de documentos -->
+            <a href="#" class="btn-nuevo-doc">+ Nuevo Documento</a>
+        </div>
+        <!-- Documentos por categoría: visible para todos los roles -->
+        <section class="categorias">
+
+            <div class="categoria">
+                <h3>Nefrología <span class="badge">3</span></h3>
+                <ul>
+                    <li>
+                        <span>Plan de alta enfermería</span>
+                        <span class="fecha">15/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                    <li>
+                        <span>Indicaciones ingreso a centro</span>
+                        <span class="fecha">10/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                    <li>
+                        <span>Indicaciones enfermería trasplantados</span>
+                        <span class="fecha">05/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="categoria">
+                <h3>Cardiología <span class="badge">3</span></h3>
+                <ul>
+                    <li>
+                        <span>Ecocardiograma con dobutamina</span>
+                        <span class="fecha">12/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                    <li>
+                        <span>Ecocardiograma transesofágico</span>
+                        <span class="fecha">08/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                    <li>
+                        <span>Centellograma perfusión miocárdica</span>
+                        <span class="fecha">03/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="categoria">
+                <h3>Urología <span class="badge">1</span></h3>
+                <ul>
+                    <li>
+                        <span>Prostatectomía radical</span>
+                        <span class="fecha">14/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="categoria">
+                <h3>Trasplante <span class="badge">1</span></h3>
+                <ul>
+                    <li>
+                        <span>Prevención de infecciones</span>
+                        <span class="fecha">11/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                    <li>
+                </ul>
+            </div>
+            <div class="categoria">
+                <h3>Ostomía <span class="badge">1</span></h3>
+                <ul>
+                    <li>
+                        <span>Pauta para pacientes ostomizados</span>
+                        <span class="fecha">09/05/2026</span>
+                        <a href="#" class="btn-ver">Ver</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="informacion-footer">
+                <h4>S.I.G.S.M.</h4>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+                <p>Hospital de Clínicas - Montevideo, Uruguay</p>
+            </div>
+            <div class="datos-proyecto-footer">
+                <h4>Proyecto de Egreso 2026</h4>
+                <p>BT - Tecnologías de la Información</p>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <p>© 2026 - S.I.G.S.M. - Hospital de Clínicas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+
