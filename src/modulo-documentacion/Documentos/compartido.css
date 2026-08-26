@@ -1,8 +1,23 @@
-/*Estilos compartidos por todas las pantallas del sistema:
-header, menú de navegación y footer.
-Cada pantalla tiene además su propio CSS con los estilos específicos.
+/*
+Estilos compartidos por todas las pantallas del sistema:
+- header, menú de navegación y footer.
+- Cada pantalla tiene además su propio CSS con estilos específicos.
 */
 
+/*
+Importante aclarar:
+Para poder leer bien los comentarios ten en cuenta que se verían así:
+
+Titulo 
+Comentario (opcional)
+Codigo
+
+Y termina con un espacio libre antes del siguiente titulo
+*/
+
+/*
+Esto es para reiniciar los márgenes y paddings de toda la página y evitar descolocaciones.
+*/
 * {
     margin: 0;
     padding: 0;
@@ -10,6 +25,10 @@ Cada pantalla tiene además su propio CSS con los estilos específicos.
     font-family: Arial, sans-serif;
 }
 
+/*
+Asegura que la página ocupe toda la altura disponible y que el contenido
+pueda organizarse verticalmente con el footer siempre al final.
+*/
 html, body {
     height: 100%;
 }
@@ -22,8 +41,10 @@ body {
     flex-direction: column;
 }
 
-/*Header*/
-
+/*
+Cabecera principal del sistema: fondo azul, título y datos del usuario.
+Se usa flex para distribuir el logo, nombre del sistema y la información del usuario.
+*/
 .barra-superior {
     background: #003d82;
     color: white;
@@ -66,9 +87,9 @@ body {
     font-size: 14px;
 }
 
-
-/* Botones*/
-
+/*
+(Estilos para los botones de acceso, ingreso y cierre de sesión)
+*/
 .btn-login,
 .btn-logout,
 .btn-ingresar,
@@ -92,9 +113,25 @@ body {
     background: #e6e6e6;
 }
 
+.btn-enviar {
+    display: inline-block;
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-/*Menu principal*/
+.btn-enviar:hover {
+    background: #002c5d;
+}
 
+/*
+(Menú principal del sistema) Se muestra como una barra horizontal con enlaces que 
+cambian de color al pasar el mouse o cuando están activos.
+*/
 .menu-principal {
     background: white;
     border-bottom: 1px solid #ccc;
@@ -119,13 +156,19 @@ body {
     color: white;
 }
 
-
-/* Contenedor principal y título de la página */
-
+/*
+(Contenedor central de la página y bloques de títulos)
+Limita el ancho del contenido y centra la sección principal para mantener
+una apariencia ordenada en todas las pantallas.
+*/
 .contenedor-principal {
     width: 90%;
     max-width: 1100px;
-    margin: 30px auto;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 main {
@@ -146,9 +189,11 @@ main {
     margin-bottom: 10px;
 }
 
-
-/*Footer*/
-
+/*
+(Pie de página del sistema) 
+Usa fondo azul oscuro para diferenciarlo del contenido principal 
+y muestra información en una columna.
+*/
 .pie-pagina {
     background: #003d82;
     color: white;
@@ -183,9 +228,22 @@ main {
     font-size: 13px;
 }
 
+/*
+Clase útil para centrar contenido dentro de un contenedor.
+Usa flexbox para alinear el contenido tanto horizontal como verticalmente.
+*/
+.centrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100%;
+}
 
-/*Diseño responsivo */
-
+/*
+Ajustes responsivos para pantallas pequeñas.
+Se arreglan el header, el menú y el footer para poderse leer en teléfono.
+*/
 @media (max-width: 768px) {
 
     .barra-superior {

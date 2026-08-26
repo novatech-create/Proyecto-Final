@@ -93,8 +93,10 @@ body {
 }
 
 
-/*Menu principal*/
-
+/*
+Menú principal del sistema. Se muestra como una barra horizontal con enlaces
+que cambian de color al pasar el mouse o cuando están activos.
+*/
 .menu-principal {
     background: white;
     border-bottom: 1px solid #ccc;
@@ -145,7 +147,6 @@ main {
     color: #003d82;
     margin-bottom: 10px;
 }
-
 
 /*Footer*/
 
