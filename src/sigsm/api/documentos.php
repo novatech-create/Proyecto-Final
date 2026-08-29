@@ -11,7 +11,7 @@ switch ($accion) {
     // GET ?action=getall  -> documentos activos agrupados por categoría
     // Usado por el panel "Gestión de Documentación" (funcionario/administrador)
     case 'getall':
-        exigirRol(['administrador', 'funcionario_documentacion']);
+        exigirRol(['administrador', 'funcionario']);
         try {
             $conexion = obtenerConexion();
             $consulta = $conexion->query(
@@ -78,7 +78,7 @@ switch ($accion) {
     // POST ?action=create  { categoria_id, titulo, descripcion, especialista, archivo_url, peso_kb }
     // Usado por el botón "+ Nuevo Documento" (funcionario/administrador)
     case 'create':
-        exigirRol(['administrador', 'funcionario_documentacion']);
+        exigirRol(['administrador', 'funcionario']);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             responder(['success' => false, 'message' => 'Usa POST.'], 405);
         }
@@ -120,7 +120,7 @@ switch ($accion) {
     // POST ?action=delete  { id: 123 } -> desactiva un documento
     // Usado por el botón "Eliminar" (funcionario/administrador)
     case 'delete':
-        exigirRol(['administrador', 'funcionario_documentacion']);
+        exigirRol(['administrador', 'funcionario']);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             responder(['success' => false, 'message' => 'Usa POST.'], 405);
         }

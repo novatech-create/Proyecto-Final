@@ -28,16 +28,39 @@ async function cerrarSesion(evento) {
   }
 }
 
+function obtenerNombreDisponible(nombre) {
+  const nombreBase = (nombre && String(nombre).trim()) ? String(nombre).trim() : '';
+  if (nombreBase) return nombreBase;
+
+  const persistido = sessionStorage.getItem('usuario_nombre')
+    || localStorage.getItem('usuario_nombre')
+    || '';
+  return persistido.trim() || 'Usuario';
+}
+
 function mostrarUsuario(nombre) {
+  const nombreReal = obtenerNombreDisponible(nombre);
+  sessionStorage.setItem('usuario_nombre', nombreReal);
+  localStorage.setItem('usuario_nombre', nombreReal);
+
   if (nombreUsuarioEl) {
-    nombreUsuarioEl.textContent = `Usuario: ${nombre}`;
-    return;
+    nombreUsuarioEl.textContent = `Usuario: ${nombreReal}`;
+  }
+
+  const saludoFuncionario = document.getElementById('bienvenidaFuncionario');
+  if (saludoFuncionario) {
+    saludoFuncionario.textContent = `Bienvenido Funcionario/a ${nombreReal}`;
+  }
+
+  const saludoAdministrador = document.getElementById('bienvenidaAdministrador');
+  if (saludoAdministrador) {
+    saludoAdministrador.textContent = `Bienvenido Administrador/a ${nombreReal}`;
   }
 
   if (!infoUsuario) return;
   infoUsuario.innerHTML = '';
   const nombreEl = document.createElement('span');
-  nombreEl.textContent = `Usuario: ${nombre}`;
+  nombreEl.textContent = `Usuario: ${nombreReal}`;
   const boton = document.createElement('a');
   boton.href = loginUrl;
   boton.id = 'botonLogout';

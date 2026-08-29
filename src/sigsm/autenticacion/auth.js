@@ -9,8 +9,7 @@ const mensajeError = document.querySelector('#mensajeError');
 
 const RUTAS_POR_ROL = {
   administrador: 'Inicio_Administrador.html',
-  funcionario_documentacion: 'inicio_funcionario_de_Documentacion.html',
-  funcionario_ambulancias: '../modulo-ambulancias/gestion-traslados/Monitoreo_General_Ambulancias.html',
+  funcionario: 'inicio_funcionario.html',
   paciente: 'inicio_pacientes.html',
 };
 
@@ -36,6 +35,12 @@ formulario.addEventListener('submit', async (evento) => {
 
     if (!respuesta.ok || !resultado.success) {
       throw new Error(resultado.message || 'No se pudo iniciar sesión.');
+    }
+
+    if (resultado.nombre) {
+      const nombreUsuario = String(resultado.nombre).trim();
+      sessionStorage.setItem('usuario_nombre', nombreUsuario);
+      localStorage.setItem('usuario_nombre', nombreUsuario);
     }
 
     const destino = RUTAS_POR_ROL[resultado.rol] || 'index.html';

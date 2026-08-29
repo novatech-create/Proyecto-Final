@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Inicio Paciente</title>
+    <title>S.I.G.S.M. - Inicio Funcionario</title>
     <link rel="stylesheet" href="compartido.css">
-    <link rel="stylesheet" href="inicio_pacientes.css">
+    <link rel="stylesheet" href="inicio_funcionario.css">
     <script src="sesion.js" defer></script>
 </head>
-<body data-roles="paciente" data-login-url="index.html">
+<body data-roles="administrador,funcionario" data-login-url="index.html">
     <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
@@ -18,45 +18,46 @@
                 <p>Sistema Informático de Gestión de Servicios Médicos</p>
             </div>
         </div>
-        <div class="info-usuario" id="infoUsuario">
-            <a href="index.html" class="btn-login">Iniciar Sesión</a>
+        <div class="info-usuario">
+            <span id="nombreUsuario">Usuario: "Nombre"</span>
+            <a href="index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
-    <!-- Menú: paciente solo ve Inicio, Documentos y Encuesta -->
-    <nav class="menu-principal">
-        <ul>
-            <li><a href="index_pacientes.html" class="activo">Inicio</a></li>
-            <li><a href="../modulo-documentacion/documentos/Gestión_de_Documentación.html">Documentos</a></li>
-            <li><a href="../modulo-documentacion/encuestas/Encuesta.html">Encuesta</a></li>
-        </ul>
-    </nav>
     <!-- Contenido -->
     <main class="contenedor-principal">
         <section class="bienvenida">
-            <h2>Bienvenid@ "Insertar Nombre"</h2>
-            <p>Acceda a los documentos y complete la encuesta desde aquí.</p>
+            <h2 id="bienvenidaFuncionario" class="centrado">Bienvenido Funcionario/a</h2>
         </section>
+        <script>
+            (function () {
+                const nombreGuardado = sessionStorage.getItem('usuario_nombre') || localStorage.getItem('usuario_nombre') || '';
+                const elemento = document.getElementById('bienvenidaFuncionario');
+                if (elemento && nombreGuardado) {
+                    elemento.textContent = 'Bienvenido Funcionario/a ' + nombreGuardado;
+                }
+            })();
+        </script>
         <section class="acceso-rapido">
-            <h3>Acceso Rápido</h3>
+            <h3 class="centrado">Acceda rápidamente a:</h3>
             <div class="tarjetas-rapidas">
-                <a href="../modulo-documentacion/documentos/Gestión_de_Documentación.html" class="tarjeta-rapida">
+                <a href="../modulo-documentacion/Funcionarios/documentos/Gestión_de_Documentación.html" class="tarjeta-rapida">
                     <span class="icono"></span>
                     <h4>Documentos</h4>
-                    <p>Ver documentación por categoría</p>
+                    <p>Gestión de documentación</p>
                 </a>
-                <a href="../modulo-documentacion/encuestas/Encuesta.html" class="tarjeta-rapida">
+                <a href="../modulo-documentacion/Funcionarios/encuestas/respuestas_encuestas.html" class="tarjeta-rapida">
                     <span class="icono"></span>
-                    <h4>Encuesta</h4>
-                    <p>Responder encuesta de satisfacción</p>
+                    <h4>Respuestas</h4>
+                    <p>Ver respuestas de encuestas</p>
                 </a>
-                <!-- Acceso administrativo: no es parte del rol paciente, se deja visible en el prototipo -->
-                <a href="Login.html" class="tarjeta-rapida">
+                <a href="../modulo-ambulancias/gestion-traslados/Monitoreo_General_Ambulancias.html" class="tarjeta-rapida">
                     <span class="icono"></span>
-                    <h4>Iniciar Sesión</h4>
-                    <p>Acceso administrativo</p>
+                    <h4>Ambulancias</h4>
+                    <p>Trazabilidad de ambulancias</p>
                 </a>
             </div>
         </section>
+
     </main>
     <!-- Footer -->
     <footer class="pie-pagina">

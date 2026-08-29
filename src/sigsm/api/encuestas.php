@@ -64,7 +64,7 @@ switch ($accion) {
 
     // GET ?action=getall -> listado y estadísticas para "Respuestas de Encuestas"
     case 'getall':
-        exigirRol(['administrador', 'funcionario_documentacion']);
+        exigirRol(['administrador', 'funcionario']);
         try {
             $conexion = obtenerConexion();
 

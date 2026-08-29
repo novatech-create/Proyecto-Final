@@ -9,7 +9,7 @@
     <script src="../../../autenticacion/sesion.js" defer></script>
     <script src="documentos.js" defer></script>
 </head>
-<body data-roles="administrador,funcionario_documentacion" data-login-url="../../../autenticacion/index.html">
+<body data-roles="administrador,funcionario" data-login-url="../../../autenticacion/index.html">
 
     <!-- Barra superior -->
     <header class="barra-superior">
@@ -28,9 +28,10 @@
     <!-- Menú principal -->
     <nav class="menu-principal">
         <ul>
-            <li><a href="../../../autenticacion/inicio_funcionario_de_Documentacion.html">Inicio</a></li>
+            <li><a href="../../../autenticacion/inicio_funcionario.html">Inicio</a></li>
             <li><a href="Gestión_de_Documentación.html" class="activo">Documentos</a></li>
             <li><a href="../encuestas/respuestas_encuestas.html">Resp. Encuestas</a></li>
+            <li><a href="../../../modulo-ambulancias/gestion-traslados/Monitoreo_General_Ambulancias.html">Ambulancias</a></li>
         </ul>
     </nav>
     <!-- Contenido -->
@@ -38,14 +39,12 @@
 
         <div class="documentos-header">
             <h2>Gestión de Documentación</h2>
-            <!-- Botón visible solo para administrador: alta de documentos -->
             <button type="button" id="botonNuevoDocumento" class="btn-nuevo-doc">+ Nuevo Documento</button>
         </div>
-        <!-- Documentos por categoría: visible para todos los roles -->
         <p id="estadoDocumentos" class="estado-carga">Cargando documentos...</p>
         <section class="categorias" id="contenedorCategorias"></section>
 
-        <!-- Formulario de alta de documento (oculto hasta hacer clic en "+ Nuevo Documento") -->
+        <!-- Formulario de alta de documento (oculto hasta darle a "Nuevo Documento") -->
         <div id="modalNuevoDocumento" class="modal-documento oculto">
             <form id="formularioNuevoDocumento" class="tarjeta-formulario">
                 <h3>Nuevo Documento</h3>
@@ -61,8 +60,8 @@
                 <label for="campoDescripcion">Descripción / indicación</label>
                 <textarea id="campoDescripcion" name="descripcion" rows="3" required></textarea>
 
-                <label for="campoArchivoUrl">Enlace del archivo (opcional)</label>
-                <input type="text" id="campoArchivoUrl" name="archivo_url" placeholder="/archivos-ficticios/ejemplo.pdf">
+                <label for="campoArchivoUrl">Enlace del archivo</label>
+                <input type="text" id="campoArchivoUrl" name="archivo_url" placeholder="../Archivos/ejemplo.pdf">
 
                 <p id="mensajeFormularioDocumento" class="mensaje-error" role="alert"></p>
 

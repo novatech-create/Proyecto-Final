@@ -9,15 +9,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
   documento VARCHAR(20) NOT NULL,
   nombre VARCHAR(150) NOT NULL,
   clave_hash VARCHAR(255) NOT NULL,
-  rol ENUM('administrador', 'funcionario_documentacion', 'funcionario_ambulancias', 'paciente') NOT NULL,
+  rol ENUM('administrador', 'funcionario', 'paciente') NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
   creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uk_usuarios_documento (documento)
 ) ENGINE=InnoDB;
-
-
--- Categorías de documentos (Nefrología, Cardiología, etc.)
 
 CREATE TABLE IF NOT EXISTS categorias_documentos (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -25,9 +22,6 @@ CREATE TABLE IF NOT EXISTS categorias_documentos (
   PRIMARY KEY (id),
   UNIQUE KEY uk_categorias_nombre (nombre)
 ) ENGINE=InnoDB;
-
-
--- Documentos médicos cargados por funcionarios/administradores
 
 CREATE TABLE IF NOT EXISTS documentos (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -46,9 +40,6 @@ CREATE TABLE IF NOT EXISTS documentos (
   CONSTRAINT fk_documentos_usuario FOREIGN KEY (creado_por) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
-
--- Respuestas de encuestas de satisfacción (anónimas)
-
 CREATE TABLE IF NOT EXISTS encuestas (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   documento_id INT UNSIGNED NULL,
@@ -63,127 +54,124 @@ CREATE TABLE IF NOT EXISTS encuestas (
   CONSTRAINT fk_encuestas_documento FOREIGN KEY (documento_id) REFERENCES documentos(id)
 ) ENGINE=InnoDB;
 
--- Contraseña de todos los usuarios: "1234"
--- El hash corresponde a password_hash('1234', PASSWORD_DEFAULT)
-
+-- Contraseña para todos: 1234
+-- Hash generado con password_hash('1234', PASSWORD_DEFAULT)
 INSERT INTO usuarios (documento, nombre, clave_hash, rol) VALUES
-('11111111','Emily Administradora','$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS','administrador'),
-('22222222','Julieta Documentación','$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS','funcionario_documentacion'),
-('33333333','Clemente Ambulancias','$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS','funcionario_ambulancias'),
-('44444444','Paciente de Prueba','$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS','paciente');
+('11111111', 'Emily Administradora', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'administrador'),
+('22222222', 'Julieta Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
+('33333333', 'Paciente Demo', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'paciente')
+ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), clave_hash = VALUES(clave_hash), rol = VALUES(rol), activo = 1;
 
-INSERT INTO categorias_documentos (nombre)VALUES
-('Nefrología'),('Cardiología'),('Urología'),
-('Trasplante'),('Imagenología'),('Neurología');
+INSERT INTO categorias_documentos (nombre) VALUES
+('Nefrología'),
+('Cardiología'),
+('Urología'),
+('Trasplante'),
+('Imagenología'),
+('Neurología');
 
-INSERT INTO documentos (categoria_id,titulo,descripcion,especialista,archivo_url,peso_kb,creado_por) VALUES
+INSERT INTO documentos (categoria_id, titulo, descripcion, especialista, archivo_url, peso_kb, creado_por) VALUES
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
-    'Plan de alta de enfermería',
-    'Indicaciones de cuidados de enfermería posteriores al alta.',
-    'Servicio de Nefrología',
-    'https://localhost/sigsm/Archivos/plan_alta_enfermeria.pdf',
-    340,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
+  'Plan de alta de enfermería',
+  'Indicaciones de cuidados de enfermería posteriores al alta.',
+  'Servicio de Nefrología',
+  'https://localhost/sigsm/Archivos/plan_alta_enfermeria.pdf',
+  340,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
-    'Indicaciones de ingreso a centro',
-    'Instrucciones para el ingreso al centro de diálisis.',
-    'Servicio de Nefrología',
-    'https://localhost/sigsm/Archivos/indicaciones_ingreso_centro.pdf',
-    210,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
+  'Indicaciones de ingreso a centro',
+  'Instrucciones para el ingreso al centro de diálisis.',
+  'Servicio de Nefrología',
+  'https://localhost/sigsm/Archivos/indicaciones_ingreso_centro.pdf',
+  210,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
-    'Indicaciones de enfermería para trasplantados',
-    'Cuidados de enfermería recomendados para pacientes trasplantados.',
-    'Servicio de Nefrología',
-    'https://localhost/sigsm/Archivos/indicaciones_enfermeria_trasplantados.pdf',
-    275,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Nefrología'),
+  'Indicaciones de enfermería para trasplantados',
+  'Cuidados de enfermería recomendados para pacientes trasplantados.',
+  'Servicio de Nefrología',
+  'https://localhost/sigsm/Archivos/indicaciones_enfermeria_trasplantados.pdf',
+  275,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
-    'Ecocardiograma con dobutamina',
-    'Resultado e indicaciones del estudio de esfuerzo farmacológico.',
-    'Servicio de Cardiología',
-    'https://localhost/sigsm/Archivos/ecocardiograma_dobutamina.pdf',
-    512,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
+  'Ecocardiograma con dobutamina',
+  'Resultado e indicaciones del estudio de esfuerzo farmacológico.',
+  'Servicio de Cardiología',
+  'https://localhost/sigsm/Archivos/ecocardiograma_dobutamina.pdf',
+  512,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
-    'Ecocardiograma transesofágico',
-    'Información correspondiente al estudio ecocardiográfico transesofágico.',
-    'Servicio de Cardiología',
-    'https://localhost/sigsm/Archivos/ecocardiograma_transesofagico.pdf',
-    480,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
+  'Ecocardiograma transesofágico',
+  'Información correspondiente al estudio ecocardiográfico transesofágico.',
+  'Servicio de Cardiología',
+  'https://localhost/sigsm/Archivos/ecocardiograma_transesofagico.pdf',
+  480,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
-    'Centellograma de perfusión miocárdica',
-    'Información sobre el estudio de perfusión miocárdica.',
-    'Servicio de Cardiología',
-    'https://localhost/sigsm/Archivos/centellograma_perfusion.pdf',
-    398,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Cardiología'),
+  'Centellograma de perfusión miocárdica',
+  'Información sobre el estudio de perfusión miocárdica.',
+  'Servicio de Cardiología',
+  'https://localhost/sigsm/Archivos/centellograma_perfusion.pdf',
+  398,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Urología'),
-    'Prostatectomía radical',
-    'Indicaciones y cuidados posteriores a una prostatectomía radical.',
-    'Servicio de Urología',
-    'https://localhost/sigsm/Archivos/prostatectomia_radical.pdf',
-    260,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Urología'),
+  'Prostatectomía radical',
+  'Indicaciones y cuidados posteriores a una prostatectomía radical.',
+  'Servicio de Urología',
+  'https://localhost/sigsm/Archivos/prostatectomia_radical.pdf',
+  260,
+  2
 ),
 (
-    (SELECT id FROM categorias_documentos WHERE nombre = 'Trasplante'),
-    'Guía de cuidados post-trasplante',
-    'Recomendaciones generales para pacientes trasplantados.',
-    'Servicio de Trasplante',
-    'https://localhost/sigsm/Archivos/guia_cuidados_post_trasplante.pdf',
-    305,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Trasplante'),
+  'Guía de cuidados post-trasplante',
+  'Recomendaciones generales para pacientes trasplantados.',
+  'Servicio de Trasplante',
+  'https://localhost/sigsm/Archivos/guia_cuidados_post_trasplante.pdf',
+  305,
+  2
 ),
 (
-    (SELECT id
-     FROM categorias_documentos
-     WHERE nombre = 'Imagenología'),
-    'Preparación para estudios de imagen',
-    'Indicaciones generales para la preparación previa a estudios de imagenología.',
-    'Servicio de Imagenología',
-    'https://localhost/sigsm/Archivos/preparacion_estudios_imagen.pdf',
-    190,
-    2
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Imagenología'),
+  'Preparación para estudios de imagen',
+  'Indicaciones generales para la preparación previa a estudios de imagenología.',
+  'Servicio de Imagenología',
+  'https://localhost/sigsm/Archivos/preparacion_estudios_imagen.pdf',
+  190,
+  2
 ),
-
-( (SELECT id FROM categorias_documentos WHERE nombre = 'Neurología'),
-    'Guía de cuidados neurológicos','Recomendaciones generales para pacientes con estudios neurológicos.',
-    'Servicio de Neurología',
-    'https://localhost/sigsm/Archivos/guia_cuidados_neurologicos.pdf',
-    225,
-    2
+(
+  (SELECT id FROM categorias_documentos WHERE nombre = 'Neurología'),
+  'Guía de cuidados neurológicos',
+  'Recomendaciones generales para pacientes con estudios neurológicos.',
+  'Servicio de Neurología',
+  'https://localhost/sigsm/Archivos/guia_cuidados_neurologicos.pdf',
+  225,
+  2
 );
 
--- datosSatisfaccion:
--- 1 = Muy insatisfecho
--- 2 = Insatisfecho
--- 3 = Neutral
--- 4 = Satisfecho
--- 5 = Muy satisfecho
+INSERT INTO encuestas (documento_id, servicio, calificacion_info, datosSatisfaccion, comprension, utilidad, comentario) VALUES
+(4, 'Cardiología', 'Excelente', 5, 'Si', 'Muy util', 'La información fue muy clara y fácil de comprender.'),
+(1, 'Nefrología', 'Buena', 4, 'Si', 'Util', 'El documento fue útil y respondió las dudas principales.'),
+(5, 'Cardiología', 'Excelente', 5, 'Si', 'Muy util', 'Todo estaba explicado correctamente.'),
+(7, 'Urología', 'Regular', 3, 'Parcialmente', 'Util', 'La información es correcta, pero podría tener más imágenes.'),
+(8, 'Trasplante', 'Excelente', 5, 'Si', 'Muy util', 'Muy fácil de entender y con información completa.'),
+(2, 'Nefrología', 'Buena', 4, 'Si', 'Util', 'Las indicaciones son claras.'),
+(3, 'Nefrología', 'Regular', 2, 'Parcialmente', 'Poco util', 'Algunas indicaciones podrían estar explicadas con mayor detalle.'),
+(9, 'Imagenología', 'Buena', 4, 'Si', 'Util', 'La información fue clara.'),
+(10, 'Neurología', 'Mala', 1, 'No', 'Nada util', 'La información no fue suficiente para comprender el procedimiento.'),
+(6, 'Cardiología', 'Regular', 3, 'Parcialmente', 'Util', 'El documento podría incluir una explicación más detallada.');
 
-INSERT INTO encuestas (documento_id,servicio,datosSatisfaccion,calificacion_info,comprension,utilidad,comentario) VALUES
-(4,'Cardiología',5,'Excelente','Si','Muy util','La información fue muy clara y fácil de comprender.'),
-(1,'Nefrología',4,'Buena','Si','Util','El documento fue útil y respondió las dudas principales.'),
-(5,'Cardiología',5,'Excelente','Si','Muy util','Todo estaba explicado correctamente.'),
-(7,'Urología',3,'Regular','Parcialmente','Util','La información es correcta, pero podría tener más imágenes.'),
-(8,'Trasplante',5,'Excelente','Si','Muy util','Muy fácil de entender y con información completa.'),
-(2,'Nefrología',4,'Buena','Si','Util','Las indicaciones son claras.'),
-(3,'Nefrología',2,'Regular','Parcialmente','Poco util','Algunas indicaciones podrían estar explicadas con mayor detalle.'),
-(9,'Imagenología',4,'Buena','Si','Util','La información fue clara.'),
-(10,'Neurología',1,'Mala','No','Nada util','La información no fue suficiente para comprender el procedimiento.'),
-(6,'Cardiología',3,'Regular','Parcialmente','Util','El documento podría incluir una explicación más detallada.');
+

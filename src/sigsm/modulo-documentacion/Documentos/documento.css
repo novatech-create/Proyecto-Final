@@ -85,6 +85,31 @@ main {
   font-weight: 600;
 }
 .badge-cat { background: #E8F1FB; color: #1A5FA8; }
+.doc-qr-wrapper {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #D1D9E6;
+}
+.doc-qr-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #0D3B6E;
+  font-weight: 600;
+  font-size: 12px;
+}
+.doc-qr-box img {
+  width: 180px;
+  height: 180px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+}
 .acciones-doc {
   display: flex;
   flex-direction: column;
@@ -105,6 +130,7 @@ main {
   gap: 8px;
   transition: background 0.15s;
   width: 100%;
+  text-decoration: none;
 }
 .btn-primario:hover { background: #155f43; }
 .btn-secundario {
@@ -122,6 +148,7 @@ main {
   gap: 8px;
   transition: background 0.15s;
   width: 100%;
+  text-decoration: none;
 }
 .btn-secundario:hover { background: #F4F6F9; }
 .visor-pdf {
