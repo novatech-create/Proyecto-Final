@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="documento.css">
+    <title>S.I.G.S.M. - Documento</title>
+    <script src="documento.js" defer></script>
+</head>
+<body>
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+
+    </header>
+    <!-- Contenido -->
+    <main>
+    <p id="estadoDocumento" class="estado-carga">Cargando documento...</p>
+    <div class="doc-card oculto" id="tarjetaDocumento">
+      <div class="doc-categoria">
+        <span class="badge badge-cat" id="docCategoria">Categoría</span>
+      </div>
+      <h1 class="doc-titulo" id="docTitulo">TituloDocumento</h1>
+      <p class="doc-descripcion" id="docDescripcion">
+        InformacionDocumento
+      </p>
+      <div class="doc-meta">
+        <span id="docFecha">Actualizado: Fecha</span>
+        <span id="docPeso">PDF  Peso</span>
+      </div>
+    </div>
+    <div class="doc-qr-wrapper oculto" id="contenedorQr" hidden>
+      <div class="doc-qr-box">
+        <p>QR del documento</p>
+        <img id="qrDocumento" alt="Código QR del documento" />
+      </div>
+    </div>
+    <div class="acciones-doc">
+      <a href="#" id="descargarDocumento" class="btn-primario" target="_blank" rel="noopener noreferrer">Descargar documento</a>
+      <a href="#" id="verDocumento" class="btn-secundario" target="_blank" rel="noopener noreferrer">Ver en pantalla</a>
+    </div>
+    <div class="visor-pdf">
+      <div class="visor-placeholder">
+        <p>Vista previa del documento</p>
+        <small>El PDF se mostrará aquí</small>
+      </div>
+    </div>
+    <a href="../Pacientes/Encuesta.html" id="enlaceEncuesta" class="btn-enviar encuesta-banner">
+      <div class="encuesta-banner-texto">
+        <strong>¿Fue útil este documento?</strong> 
+        <span>Completá una encuesta breve y ayudanos a mejorar</span>
+      </div>
+    </a>
+  </main>
+
+</body>
+</html>
+
