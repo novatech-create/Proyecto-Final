@@ -3,12 +3,13 @@ const API_BASE = '/sigsm/api';
 
 const estadoDocumento = document.querySelector('#estadoDocumento');
 const tarjetaDocumento = document.querySelector('#tarjetaDocumento');
+const contenedorQr = document.querySelector('#contenedorQr');
+const qrDocumento = document.querySelector('#qrDocumento');
 const docCategoria = document.querySelector('#docCategoria');
 const docTitulo = document.querySelector('#docTitulo');
 const docDescripcion = document.querySelector('#docDescripcion');
 const docFecha = document.querySelector('#docFecha');
 const docPeso = document.querySelector('#docPeso');
-const enlaceEncuesta = document.querySelector('#enlaceEncuesta');
 const enlaceDescarga = document.querySelector('#descargarDocumento');
 const enlaceVista = document.querySelector('#verDocumento');
 
@@ -36,6 +37,16 @@ async function cargarDocumento() {
     docFecha.textContent = `Actualizado: ${formatearFecha(documento.fecha_actualizacion)}`;
     docPeso.textContent = `PDF ${documento.peso_kb} KB`;
 
+    const urlDocumento = `${window.location.origin}/sigsm/modulo-documentacion/Documentos/documento.html?id=${documento.id}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlDocumento)}`;
+    if (qrDocumento) {
+      qrDocumento.src = qrUrl;
+      qrDocumento.alt = `QR para ${documento.titulo}`;
+    }
+    if (contenedorQr) {
+      contenedorQr.classList.remove('oculto');
+    }
+
     if (enlaceDescarga) {
       enlaceDescarga.href = documento.archivo_url || '#';
       enlaceDescarga.classList.toggle('oculto', !documento.archivo_url);
@@ -43,10 +54,6 @@ async function cargarDocumento() {
     if (enlaceVista) {
       enlaceVista.href = documento.archivo_url || '#';
       enlaceVista.classList.toggle('oculto', !documento.archivo_url);
-    }
-
-    if (enlaceEncuesta) {
-      enlaceEncuesta.href = `../Pacientes/Encuesta.html?documento_id=${documento.id}&servicio=${encodeURIComponent(documento.categoria_nombre)}`;
     }
 
     estadoDocumento.textContent = '';

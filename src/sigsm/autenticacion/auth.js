@@ -8,7 +8,6 @@ const botonIngresar = document.querySelector('#botonIngresar');
 const mensajeError = document.querySelector('#mensajeError');
 
 const RUTAS_POR_ROL = {
-  administrador: 'Inicio_Administrador.html',
   funcionario: 'inicio_funcionario.html',
   paciente: 'inicio_pacientes.html',
 };

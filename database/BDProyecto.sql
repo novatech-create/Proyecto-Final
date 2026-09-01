@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   documento VARCHAR(20) NOT NULL,
   nombre VARCHAR(150) NOT NULL,
   clave_hash VARCHAR(255) NOT NULL,
-  rol ENUM('administrador', 'funcionario', 'paciente') NOT NULL,
+  rol ENUM('funcionario') NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
   creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -57,9 +57,9 @@ CREATE TABLE IF NOT EXISTS encuestas (
 -- Contraseña para todos: 1234
 -- Hash generado con password_hash('1234', PASSWORD_DEFAULT)
 INSERT INTO usuarios (documento, nombre, clave_hash, rol) VALUES
-('11111111', 'Emily Administradora', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'administrador'),
-('22222222', 'Julieta Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
-('33333333', 'Paciente Demo', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'paciente')
+('11111111', 'Sujeto1 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
+('22222222', 'Sujeto2 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
+('33333333', 'Sujeto3 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario')
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), clave_hash = VALUES(clave_hash), rol = VALUES(rol), activo = 1;
 
 INSERT INTO categorias_documentos (nombre) VALUES
@@ -173,5 +173,3 @@ INSERT INTO encuestas (documento_id, servicio, calificacion_info, datosSatisfacc
 (9, 'Imagenología', 'Buena', 4, 'Si', 'Util', 'La información fue clara.'),
 (10, 'Neurología', 'Mala', 1, 'No', 'Nada util', 'La información no fue suficiente para comprender el procedimiento.'),
 (6, 'Cardiología', 'Regular', 3, 'Parcialmente', 'Util', 'El documento podría incluir una explicación más detallada.');
-
-

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="inicio_funcionario.css">
     <script src="sesion.js" defer></script>
 </head>
-<body data-roles="administrador,funcionario" data-login-url="index.html">
+<body data-roles="funcionario" data-login-url="index.html">
     <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
@@ -28,15 +28,6 @@
         <section class="bienvenida">
             <h2 id="bienvenidaFuncionario" class="centrado">Bienvenido Funcionario/a</h2>
         </section>
-        <script>
-            (function () {
-                const nombreGuardado = sessionStorage.getItem('usuario_nombre') || localStorage.getItem('usuario_nombre') || '';
-                const elemento = document.getElementById('bienvenidaFuncionario');
-                if (elemento && nombreGuardado) {
-                    elemento.textContent = 'Bienvenido Funcionario/a ' + nombreGuardado;
-                }
-            })();
-        </script>
         <section class="acceso-rapido">
             <h3 class="centrado">Acceda rápidamente a:</h3>
             <div class="tarjetas-rapidas">

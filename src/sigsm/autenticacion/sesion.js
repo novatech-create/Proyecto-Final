@@ -52,11 +52,6 @@ function mostrarUsuario(nombre) {
     saludoFuncionario.textContent = `Bienvenido Funcionario/a ${nombreReal}`;
   }
 
-  const saludoAdministrador = document.getElementById('bienvenidaAdministrador');
-  if (saludoAdministrador) {
-    saludoAdministrador.textContent = `Bienvenido Administrador/a ${nombreReal}`;
-  }
-
   if (!infoUsuario) return;
   infoUsuario.innerHTML = '';
   const nombreEl = document.createElement('span');

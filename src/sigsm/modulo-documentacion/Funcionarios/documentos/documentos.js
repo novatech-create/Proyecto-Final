@@ -11,7 +11,7 @@ const botonCancelarDocumento = document.querySelector('#botonCancelarDocumento')
 const mensajeFormularioDocumento = document.querySelector('#mensajeFormularioDocumento');
 
 async function cargarDocumentos() {
-  estadoDocumentos.textContent = 'Cargando documentos...';
+  estadoDocumentos.textContent = 'cargando documentos';
   contenedorCategorias.innerHTML = '';
 
   try {
@@ -34,7 +34,7 @@ async function cargarDocumentos() {
 
 function renderizarCategorias(categorias) {
   if (categorias.length === 0) {
-    contenedorCategorias.innerHTML = '<p>No hay documentos cargados todavía.</p>';
+    contenedorCategorias.innerHTML = '<p>No hay documentos cargados todavía</p>';
     return;
   }
 
@@ -46,7 +46,7 @@ function renderizarCategorias(categorias) {
           <li>
             <span>${escapeHtml(documento.titulo)}</span>
             <span class="fecha">${formatearFecha(documento.fecha_actualizacion)}</span>
-            <a href="../../Documentos/documento.html?id=${documento.id}" class="btn-ver">Ver</a>
+            <a href="PrevistaDocumentos/AdmDocumento.html?id=${documento.id}" class="btn-ver">Ver</a>
             <button type="button" class="btn-eliminar" data-documento-id="${documento.id}">Eliminar</button>
           </li>
         `).join('')}
@@ -77,7 +77,7 @@ function escapeHtml(valor) {
 }
 
 async function eliminarDocumento(id, boton) {
-  if (!window.confirm('¿Está seguro de que desea eliminar este documento?')) return;
+  if (!window.confirm('Está seguro que desea eliminar este documento?')) return;
 
   boton.disabled = true;
 
@@ -91,7 +91,7 @@ async function eliminarDocumento(id, boton) {
     const resultado = await respuesta.json();
 
     if (!respuesta.ok || !resultado.success) {
-      throw new Error(resultado.message || 'No se pudo eliminar el documento.');
+      throw new Error(resultado.message || 'No se pudo eliminar el documento');
     }
 
     await cargarDocumentos();
