@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-// Sesión compartida por todos los endpoints (login, rol activo, etc.)
+// Sesión compartida por todos (login, rol activo, etc.)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// CORS: permite que el frontend (aunque se abra con Live Server u otro puerto)
-// pueda llamar a la API y mantener la sesión (credentials).
+// CORS: permite que el frontend pueda llamar a la API y mantener la sesión
 $origen = $_SERVER['HTTP_ORIGIN'] ?? '*';
 header("Access-Control-Allow-Origin: {$origen}");
 header('Access-Control-Allow-Credentials: true');
@@ -20,9 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-/**
- * Envía una respuesta JSON y termina la ejecución.
- */
+// Envía una respuesta JSON y termina la ejecución.
 function responder(array $payload, int $codigo = 200): void
 {
     http_response_code($codigo);
@@ -30,10 +27,7 @@ function responder(array $payload, int $codigo = 200): void
     exit;
 }
 
-/**
- * Lee el cuerpo de la petición como JSON, con fallback a $_POST
- * (útil si el frontend usa fetch con JSON o un <form> tradicional).
- */
+// Lee el cuerpo de la petición como JSON, si no es JSON devuelve $_POST
 function cuerpoPeticion(): array
 {
     $crudo = file_get_contents('php://input');
@@ -44,10 +38,7 @@ function cuerpoPeticion(): array
     return $_POST;
 }
 
-/**
- * Corta la ejecución si no hay sesión iniciada o el rol no está permitido.
- * @param string[] $rolesPermitidos
- */
+//Corta la ejecución si no hay sesión iniciada o el rol no está permitido.
 function exigirRol(array $rolesPermitidos): void
 {
     if (!isset($_SESSION['usuario_id'])) {

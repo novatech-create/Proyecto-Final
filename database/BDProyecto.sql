@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   documento VARCHAR(20) NOT NULL,
   nombre VARCHAR(150) NOT NULL,
-  clave_hash VARCHAR(255) NOT NULL,
+  clave VARCHAR(255) NOT NULL,
   rol ENUM('funcionario') NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
   creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,12 +55,11 @@ CREATE TABLE IF NOT EXISTS encuestas (
 ) ENGINE=InnoDB;
 
 -- Contraseña para todos: 1234
--- Hash generado con password_hash('1234', PASSWORD_DEFAULT)
-INSERT INTO usuarios (documento, nombre, clave_hash, rol) VALUES
-('11111111', 'Sujeto1 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
-('22222222', 'Sujeto2 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario'),
-('33333333', 'Sujeto3 Documentación', '$2b$10$vQFm5BYbIW/8Js9dh25ve.A4nxdc7wLoyYzfIaExyDxkVsh3bz1WS', 'funcionario')
-ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), clave_hash = VALUES(clave_hash), rol = VALUES(rol), activo = 1;
+INSERT INTO usuarios (documento, nombre, clave, rol) VALUES
+('11111111', 'Sujeto1 Documentación', '1234', 'funcionario'),
+('22222222', 'Sujeto2 Documentación', '1234', 'funcionario'),
+('33333333', 'Sujeto3 Documentación', '1234', 'funcionario')
+ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), clave = VALUES(clave), rol = VALUES(rol), activo = 1;
 
 INSERT INTO categorias_documentos (nombre) VALUES
 ('Nefrología'),
