@@ -23,9 +23,9 @@ S.I.G.S.M. es un sistema web desarrollado para el **Hospital de Clínicas** que 
 - **Servidor:** Rocky Linux 9.7
 - **Control de versiones:** Git / GitHub
 
-# Estructura del repositorio
+# Estructura actual del repositorio
 
-Proyecto-HospitalDeClinicas/
+Proyecto-Final/
 |
 |-> docs/    # Documentación por entrega
 |   |-> primera-entrega/
