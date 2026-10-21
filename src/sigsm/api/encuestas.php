@@ -14,6 +14,7 @@ $accion = $_GET['action'] ?? $_POST['action'] ?? '';
 const OPCIONES_CALIFICACION = ['Excelente', 'Buena', 'Regular', 'Mala'];
 const OPCIONES_COMPRENSION = ['Si', 'Parcialmente', 'No'];
 const OPCIONES_UTILIDAD = ['Muy util', 'Util', 'Poco util', 'Nada util'];
+const OPCIONES_SERVICIO = ['Cardiología', 'Nefrología', 'Trasplante', 'Imagenología', 'Neurología', 'Urología'];
 
 switch ($accion) {
 
@@ -26,20 +27,31 @@ switch ($accion) {
 
         // Lee el JSON enviado desde el frontend y lo transforma en un array asociativo
         $datos = cuerpoPeticion();
-        $servicio = trim((string)($datos['servicio'] ?? ''));
-        $calificacion = (string)($datos['calificacion_info'] ?? '');
-        $datosSatisfaccion = (int)($datos['datosSatisfaccion'] ?? 0);
-        $comprension = (string)($datos['comprension'] ?? '');
-        $utilidad = (string)($datos['utilidad'] ?? '');
-        $comentario = trim((string)($datos['comentario'] ?? ''));
-        $documentoId = isset($datos['documento_id']) && $datos['documento_id'] !== ''
-        ? (int)$datos['documento_id']
-        : null;
+        $servicio = is_string($datos['servicio'] ?? null) ? trim($datos['servicio']) : '';
+        $calificacion = is_string($datos['calificacion_info'] ?? null) ? $datos['calificacion_info'] : '';
+        $satisfaccionRecibida = $datos['datosSatisfaccion'] ?? null;
+        $datosSatisfaccion = is_string($satisfaccionRecibida) || is_int($satisfaccionRecibida)
+            ? (int)$satisfaccionRecibida : 0;
+        $comprension = is_string($datos['comprension'] ?? null) ? $datos['comprension'] : '';
+        $utilidad = is_string($datos['utilidad'] ?? null) ? $datos['utilidad'] : '';
+        $comentario = is_string($datos['comentario'] ?? null) ? trim($datos['comentario']) : '';
+        $documentoRecibido = $datos['documento_id'] ?? '';
+        $documentoId = $documentoRecibido === '' ? null
+            : ((is_string($documentoRecibido) || is_int($documentoRecibido))
+                ? filter_var($documentoRecibido, FILTER_VALIDATE_INT) : false);
+        $documentoId = $documentoId === false || ($documentoId !== null && $documentoId <= 0)
+            ? 0 : $documentoId;
 
         // Valida todos los campos obligatorios antes de guardar la encuesta
         // También se comprueba que las opciones elegidas estén dentro de los valores permitidos
-        if ($servicio === '' || !in_array($calificacion, OPCIONES_CALIFICACION, true) || $datosSatisfaccion < 1 || $datosSatisfaccion > 5
-            || !in_array($comprension, OPCIONES_COMPRENSION, true) || !in_array($utilidad, OPCIONES_UTILIDAD, true)
+        if (!in_array($servicio, OPCIONES_SERVICIO, true)
+            || !in_array($calificacion, OPCIONES_CALIFICACION, true)
+            || !in_array($datos['datosSatisfaccion'] ?? null, ['1', '2', '3', '4', '5', 1, 2, 3, 4, 5], true)
+            || $datosSatisfaccion < 1 || $datosSatisfaccion > 5
+            || !in_array($comprension, OPCIONES_COMPRENSION, true)
+            || !in_array($utilidad, OPCIONES_UTILIDAD, true)
+            || ($documentoId !== null && $documentoId <= 0)
+            || mb_strlen($comentario, 'UTF-8') > 2000
         ) {
             responder(['success' => false, 'message' => 'Complete todas las preguntas obligatorias.'], 400);
         }
@@ -47,6 +59,15 @@ switch ($accion) {
         // Intenta guardar la encuesta en la base de datos
         try {
             $conexion = obtenerConexion();
+            if ($documentoId !== null) {
+                $documentoExiste = $conexion->prepare(
+                    'SELECT 1 FROM vw_documentos_activos WHERE id = :id LIMIT 1'
+                );
+                $documentoExiste->execute(['id' => $documentoId]);
+                if (!$documentoExiste->fetchColumn()) {
+                    responder(['success' => false, 'message' => 'El documento indicado no existe o no está activo.'], 400);
+                }
+            }
             $consulta = $conexion->prepare(
             'INSERT INTO encuestas (documento_id, servicio, calificacion_info, datosSatisfaccion, comprension, utilidad, comentario)
              VALUES (:documento_id, :servicio, :calificacion_info, :datosSatisfaccion, :comprension, :utilidad, :comentario)'
@@ -76,34 +97,32 @@ switch ($accion) {
         try {
             $conexion = obtenerConexion();
 
-            // Trae todas las encuestas ordenadas por fecha más reciente.
+            // Obtiene el detalle y las estadísticas desde vistas de reporte.
             $listado = $conexion->query(
                 'SELECT servicio, calificacion_info, datosSatisfaccion, comentario, creado_en
-                 FROM encuestas
+                 FROM vw_encuestas_detalle
                  ORDER BY creado_en DESC'
             )->fetchAll();
 
-            $total = count($listado);
+            $resumenServicios = $conexion->query(
+                'SELECT servicio, total_respuestas, suma_satisfaccion
+                 FROM vw_encuestas_resumen'
+            )->fetchAll();
 
-            // Calcula el promedio general usando la nota numérica guardada en la BD.
+            $total = 0;
             $suma = 0;
-            $conteoServicios = [];
-            foreach ($listado as $fila) {
-                $suma += (int)$fila['datosSatisfaccion'];
-                $servicio = $fila['servicio'];
-                $conteoServicios[$servicio] = ($conteoServicios[$servicio] ?? 0) + 1;
-            }
-            $promedio = $total > 0 ? round($suma / $total, 1) : 0;
-
-            // Busca cuál servicio fue el más consultado.
             $servicioTop = null;
             $maxConteo = 0;
-            foreach ($conteoServicios as $servicio => $conteo) {
+            foreach ($resumenServicios as $fila) {
+                $conteo = (int)$fila['total_respuestas'];
+                $total += $conteo;
+                $suma += (int)$fila['suma_satisfaccion'];
                 if ($conteo > $maxConteo) {
                     $maxConteo = $conteo;
-                    $servicioTop = $servicio;
+                    $servicioTop = $fila['servicio'];
                 }
             }
+            $promedio = $total > 0 ? round($suma / $total, 1) : 0;
 
             // Devuelve tanto el listado como las estadísticas.
             responder([

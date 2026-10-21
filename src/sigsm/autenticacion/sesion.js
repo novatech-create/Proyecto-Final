@@ -2,6 +2,20 @@
   // Ruta base de la API del sistema
   const API_BASE = '/sigsm/api';
 
+  const fetchOriginal = window.fetch.bind(window);
+  window.fetch = (input, init = {}) => {
+    const url = new URL(input instanceof Request ? input.url : input, window.location.href);
+    const token = localStorage.getItem('auth_token');
+    if (url.origin !== window.location.origin || !url.pathname.startsWith(`${API_BASE}/`) || !token) {
+      return fetchOriginal(input, init);
+    }
+
+    const headers = new Headers(input instanceof Request ? input.headers : undefined);
+    new Headers(init.headers).forEach((valor, nombre) => headers.set(nombre, valor));
+    headers.set('Authorization', `Bearer ${token}`);
+    return fetchOriginal(input, { ...init, headers });
+  };
+
   // Elementos de la interfaz que muestran el nombre del usuario y el botón de logout
   const nombreUsuarioEl = document.querySelector('#nombreUsuario');
   const botonLogout = document.querySelector('#botonLogout');
@@ -32,6 +46,9 @@
         credentials: 'include',
       });
     } finally {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('usuario_nombre');
+      sessionStorage.removeItem('usuario_nombre');
       redirigirAlLogin();
     }
   }

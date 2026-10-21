@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S.I.G.S.M. - Traslados Activos</title>
     <link rel="stylesheet" href="compartido.css">
-    <link rel="stylesheet" href="panel_traslados_activos.css">
+    <link rel="stylesheet" href="panel_traslados_activos.css?v=20261020-2">
+    <script src="../../autenticacion/sesion.js" defer></script>
+    <script src="traslados_activos.js" defer></script>
 </head>
-<body>
+<body data-roles="funcionario" data-login-url="../../autenticacion/index.html">
     <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
@@ -18,63 +20,47 @@
             </div>
         </div>
         <div class="info-usuario">
-            <span>Usuario: "Nombre"</span>
-            <a href="../../autenticacion/index.html" class="btn-logout">Cerrar Sesión</a>
+            <span id="nombreUsuario">Usuario</span>
+            <a href="../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
 
     <!-- Contenido -->
     <main class="contenedor-principal">
         <section class="titulo">
-            <h2>Traslados Activos</h2>
-            <p>Seguimiento del estado de cada traslado en curso.</p>
+            <div class="encabezado-seguimiento">
+                <div>
+                    <h2>Traslados Activos</h2>
+                    <p>Seguimiento del estado de cada traslado en curso.</p>
+                </div>
+                <a class="btn-accion" id="enlaceNuevoTraslado" href="Formulario_traslado.html" hidden>+ Nuevo traslado</a>
+            </div>
         </section>
         <section class="estadisticas">
             <div class="tarjeta">
-                <h3>3</h3>
+                <h3 id="totalActivos">-</h3>
                 <p>Total activos</p>
             </div>
             <div class="tarjeta">
-                <h3>1</h3>
-                <p>Prioridad alta</p>
+                <h3 id="totalAlta">-</h3>
+                <p>Solicitudes pendientes</p>
             </div>
             <div class="tarjeta">
-                <h3>08:45</h3>
-                <p>Última actualización</p>
+                <h3 id="ultimaActualizacion">-</h3>
+                <p>Próxima llegada estimada</p>
             </div>
         </section>
-        <section class="lista-traslados">
-            <div class="tarjeta-traslado alta">
-                <h3>Ambulancia 01</h3>
-                <p><strong>Destino:</strong> Piso 2 - Sala 4</p>
-                <p><strong>Paciente:</strong> Martín Fernández</p>
-                <p><strong>Hora:</strong> 08:50</p>
-                <button type="button" class="btn-accion">Gestionar</button>
-            </div>
+        <p id="estadoTraslados" class="estado-carga" role="status">Cargando traslados...</p>
+        <section class="lista-traslados" id="listaTraslados"></section>
 
-            <div class="tarjeta-traslado media">
-                <h3>Ambulancia 03</h3>
-                <p><strong>Destino:</strong> Tomografía</p>
-                <p><strong>Paciente:</strong> Ana López</p>
-                <p><strong>Hora:</strong> 09:10</p>
-                <button type="button" class="btn-accion">Gestionar</button>
+        <section class="historial-traslados">
+            <div class="historial-titulo">
+                <h2>Traslados recientes finalizados o cancelados</h2>
             </div>
-
-            <div class="tarjeta-traslado baja">
-                <h3>Ambulancia 02</h3>
-                <p><strong>Destino:</strong> Alta médica - Domicilio</p>
-                <p><strong>Paciente:</strong> Laura Pérez</p>
-                <p><strong>Hora:</strong> 09:40</p>
-                <button type="button" class="btn-accion">Gestionar</button>
-            </div>
-
+            <div id="historialTraslados"></div>
         </section>
 
-        <div>
-            <a href="../gestion-traslados/Monitoreo_General_Ambulancias.html">
-            <button id="volver-panel" type="button" class="btn-accion">Volver al Panel</button>
-            </a>
-        </div>
+        <a href="../gestion-traslados/Monitoreo_General_Ambulancias.html" id="volver-panel" class="btn-accion">Volver al monitoreo</a>
 
     </main>
 

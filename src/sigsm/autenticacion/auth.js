@@ -20,6 +20,16 @@
   formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault();
 
+    const documento = campoUsuario.value.trim();
+    if (!/^[0-9]{1,20}$/.test(documento) || campoClave.value.length === 0
+      || new TextEncoder().encode(campoClave.value).length > 72
+    ) {
+      mensajeError.textContent = 'Ingrese un documento válido y una contraseña de hasta 72 caracteres.';
+      mensajeError.classList.add('visible');
+      formulario.reportValidity();
+      return;
+    }
+
     // Limpia mensajes y deshabilita el botón mientras se procesa el login
     mensajeError.textContent = '';
     mensajeError.classList.remove('visible');
@@ -33,7 +43,7 @@
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          usuario: campoUsuario.value.trim(),
+          usuario: documento,
           clave: campoClave.value,
         }),
       });
@@ -43,6 +53,8 @@
       if (!respuesta.ok || !resultado.success) {
         throw new Error(resultado.message || 'No se pudo iniciar sesión.');
       }
+
+      localStorage.setItem('auth_token', resultado.token);
 
       // Guarda el nombre para mostrarlo en otras pantallas
       if (resultado.nombre) {

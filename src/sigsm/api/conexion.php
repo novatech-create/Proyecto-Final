@@ -7,8 +7,8 @@ function obtenerConexion(): PDO
     $host = getenv('DB_HOST') ?: '127.0.0.1';
     $port = getenv('DB_PORT') ?: '3306';
     $database = getenv('DB_NAME') ?: 'sigsm1';
-    $username = getenv('DB_USER') ?: 'root';
-    $password = getenv('DB_PASSWORD') ?: '';
+    $username = getenv('DB_USER') ?: 'sigsm_app';
+    $password = getenv('DB_PASSWORD') ?: '3747eedda426c2821890a7fa485c748375cfb636e347159b658092a7561710f9';
     $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
 
     // Se crea una nueva PDO para conectarse a la base de datos con las credenciales y opciones puestas

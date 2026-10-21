@@ -26,10 +26,10 @@
         <form id="formularioLogin">
 
             <label for="usuario">Documento:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" required>
+            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario o documento" inputmode="numeric" pattern="[0-9]{1,20}" maxlength="20" required>
 
             <label for="clave">Contraseña:</label>
-            <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" required>
+            <input type="password" id="clave" name="clave" placeholder="Ingrese su contraseña" maxlength="72" required>
 
             <p id="mensajeError" class="mensaje-error" role="alert"></p>
 

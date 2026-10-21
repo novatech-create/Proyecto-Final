@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Administración de Transporte</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="administracion_ambulancias.css">
+    <script src="../../autenticacion/sesion.js" defer></script>
+    <script src="administracion_ambulancias.js" defer></script>
+</head>
+<body data-roles="funcionario" data-login-url="../../autenticacion/index.html">
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+        <div class="info-usuario">
+            <span id="nombreUsuario">Usuario</span>
+            <a href="../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+    <main class="admin-transporte">
+        <header class="admin-titulo">
+            <div>
+                <h2>Administración del transporte</h2>
+                <p>Personal, credenciales, vehículos y rutas</p>
+            </div>
+            <a href="../gestion-traslados/Monitoreo_General_Ambulancias.html" class="btn-volver">Volver al monitoreo</a>
+        </header>
+
+        <p id="mensajeAdmin" role="status"></p>
+
+        <section class="admin-columnas">
+            <form id="formularioPersonal" class="formulario-admin">
+                <h3>Crear cuenta y perfiles</h3>
+                <label for="Documento">Documento</label>
+                <input id="Documento" name="Documento" inputmode="numeric" pattern="[0-9]{1,20}" maxlength="20" required>
+                <label for="Nombre">Nombre completo</label>
+                <input id="Nombre" name="Nombre" maxlength="150" required>
+                <label for="Clave">Contraseña inicial</label>
+                <input id="Clave" name="Clave" type="password" minlength="10" maxlength="72" autocomplete="new-password" required>
+
+                <fieldset>
+                    <legend>Perfiles</legend>
+                    <label><input type="checkbox" name="Perfil" value="chofer"> Chofer</label>
+                    <label><input type="checkbox" name="Perfil" value="enfermero"> Enfermero</label>
+                    <label><input type="checkbox" name="Perfil" value="medico"> Médico</label>
+                    <label><input type="checkbox" name="Perfil" value="administrativo"> Administrativo</label>
+                </fieldset>
+                <label for="TipoLicencia">Tipo de licencia (si es chofer)</label>
+                <input id="TipoLicencia" name="TipoLicencia" maxlength="30">
+                <label for="Especialidad">Especialidad (si es enfermero)</label>
+                <input id="Especialidad" name="Especialidad" maxlength="120">
+                <label for="Telefonos">Teléfonos (uno por línea)</label>
+                <textarea id="Telefonos" name="Telefonos" rows="2" maxlength="300"></textarea>
+                <button type="submit">Crear cuenta</button>
+            </form>
+
+            <div class="columna-configuracion">
+                <form id="formularioVehiculo" class="formulario-admin">
+                    <h3>Vehículos</h3>
+                    <label for="Matricula">Matrícula</label>
+                    <input id="Matricula" name="Matricula" maxlength="15" required>
+                    <label for="TipoVehiculo">Tipo de vehículo</label>
+                    <input id="TipoVehiculo" name="TipoVehiculo" maxlength="50" placeholder="Ambulancia, auto..." required>
+                    <label class="opcion"><input id="RequiereEspecializado" name="RequiereEspecializado" type="checkbox"> Requiere personal especializado</label>
+                    <button type="submit">Guardar vehículo</button>
+                </form>
+
+                <form id="formularioRuta" class="formulario-admin">
+                    <h3>Rutas</h3>
+                    <label for="PuntoOrigen">Origen</label>
+                    <input id="PuntoOrigen" name="PuntoOrigen" maxlength="200" required>
+                    <label for="PuntoDestino">Destino</label>
+                    <input id="PuntoDestino" name="PuntoDestino" maxlength="200" required>
+                    <label class="opcion"><input id="RutinaBase" name="RutinaBase" type="checkbox"> Ruta habitual</label>
+                    <button type="submit">Guardar ruta</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="lista-personal">
+            <h3>Personal vinculado</h3>
+            <div class="tabla-desborde">
+                <table>
+                    <thead><tr><th>Nombre</th><th>Documento</th><th>Perfiles</th><th>Estado</th><th>Acción</th></tr></thead>
+                    <tbody id="tablaPersonal"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="catalogos-admin">
+            <div><h3>Vehículos registrados</h3><ul id="listaVehiculos"></ul></div>
+            <div><h3>Rutas registradas</h3><ul id="listaRutas"></ul></div>
+        </section>
+    </main>
+</body>
+</html>

@@ -20,13 +20,10 @@ switch ($accion) {
             $conexion = obtenerConexion();
             $consulta = $conexion->query(
                 
-                // Trae todos los documentos activos, junto con su categoría, ordenados y con fecha de actualización
-                'SELECT d.id, d.titulo, d.descripcion, d.especialista, d.archivo_url, d.peso_kb,
-                        d.fecha_actualizacion, c.id AS categoria_id, c.nombre AS categoria_nombre
-                 FROM documentos d
-                 JOIN categorias_documentos c ON c.id = d.categoria_id
-                 WHERE d.activo = 1
-                 ORDER BY c.nombre ASC, d.fecha_actualizacion DESC'
+                'SELECT id, titulo, descripcion, especialista, archivo_url, peso_kb,
+                    fecha_actualizacion, categoria_id, categoria_nombre
+                 FROM vw_documentos_activos
+                 ORDER BY categoria_nombre ASC, fecha_actualizacion DESC'
             );
             
             // Guarda todas las filas resultantes en un array asociativo
@@ -66,7 +63,9 @@ switch ($accion) {
     case 'get':
 
         // Toma el id del navegador y la pasa a int
-        $id = (int)($_GET['id'] ?? 0);
+        $idRecibido = $_GET['id'] ?? null;
+        $id = is_string($idRecibido) ? filter_var($idRecibido, FILTER_VALIDATE_INT) : false;
+        $id = $id !== false && $id > 0 ? $id : 0;
         
         // Si el id es menor o igual a 0, devuelve un error 400 (Bad Request)
         if ($id <= 0) {
@@ -77,11 +76,10 @@ switch ($accion) {
         // Busca un documento activo por su id, junto con su categoría
             $conexion = obtenerConexion();
             $consulta = $conexion->prepare(
-                'SELECT d.id, d.titulo, d.descripcion, d.especialista, d.archivo_url, d.peso_kb,
-                        d.fecha_actualizacion, c.nombre AS categoria_nombre
-                 FROM documentos d
-                 JOIN categorias_documentos c ON c.id = d.categoria_id
-                 WHERE d.id = :id AND d.activo = 1'
+                'SELECT id, titulo, descripcion, especialista, archivo_url, peso_kb,
+                    fecha_actualizacion, categoria_nombre
+                 FROM vw_documentos_activos
+                 WHERE id = :id'
             );
             $consulta->execute(['id' => $id]);
             $documento = $consulta->fetch();
@@ -107,20 +105,46 @@ switch ($accion) {
 
         // Lee los datos enviados por el navegador y los valida, si falta alguno da error 400 (Bad Request)
         $datos = cuerpoPeticion();
-        $categoriaId = (int)($datos['categoria_id'] ?? 0);
-        $titulo = trim((string)($datos['titulo'] ?? ''));
-        $descripcion = trim((string)($datos['descripcion'] ?? ''));
-        $especialista = trim((string)($datos['especialista'] ?? ''));
-        $archivoUrl = trim((string)($datos['archivo_url'] ?? ''));
-        $pesoKb = (int)($datos['peso_kb'] ?? 0);
+        $categoriaRecibida = $datos['categoria_id'] ?? null;
+        $categoriaId = is_string($categoriaRecibida) || is_int($categoriaRecibida)
+            ? filter_var($categoriaRecibida, FILTER_VALIDATE_INT) : false;
+        $categoriaId = $categoriaId !== false && $categoriaId > 0 ? $categoriaId : 0;
+        $titulo = is_string($datos['titulo'] ?? null) ? trim($datos['titulo']) : '';
+        $descripcion = is_string($datos['descripcion'] ?? null) ? trim($datos['descripcion']) : '';
+        $especialista = is_string($datos['especialista'] ?? null) ? trim($datos['especialista']) : '';
+        $archivoUrl = is_string($datos['archivo_url'] ?? null) ? trim($datos['archivo_url']) : '';
+        $pesoRecibido = $datos['peso_kb'] ?? 0;
+        $pesoKb = is_string($pesoRecibido) || is_int($pesoRecibido)
+            ? filter_var($pesoRecibido, FILTER_VALIDATE_INT) : false;
 
         // Si faltan datos tira otro error 400
-        if ($categoriaId <= 0 || $titulo === '' || $descripcion === '' || $especialista === '') {
-            responder(['success' => false, 'message' => 'Complete categoría, título, descripción y especialista.'], 400);
+        $partesUrl = $archivoUrl !== '' ? parse_url($archivoUrl) : false;
+        $urlWebValida = $partesUrl !== false
+            && isset($partesUrl['scheme'])
+            && in_array(strtolower($partesUrl['scheme']), ['http', 'https'], true)
+            && isset($partesUrl['path'])
+            && preg_match('/\.pdf$/i', $partesUrl['path']) === 1
+            && filter_var($archivoUrl, FILTER_VALIDATE_URL) !== false;
+        $urlLocalValida = preg_match('/^(\.\.\/Archivos\/)?[A-Za-z0-9_.%-]+\.pdf$/i', $archivoUrl) === 1;
+        $archivoUrlValida = $archivoUrl === '' || $urlWebValida || $urlLocalValida;
+        if ($categoriaId <= 0 || $titulo === '' || mb_strlen($titulo, 'UTF-8') > 200
+            || $descripcion === '' || mb_strlen($descripcion, 'UTF-8') > 10000
+            || $especialista === '' || mb_strlen($especialista, 'UTF-8') > 160
+            || mb_strlen($archivoUrl, 'UTF-8') > 255 || !$archivoUrlValida
+            || $pesoKb === false || $pesoKb < 0 || $pesoKb > 4294967295
+        ) {
+            responder(['success' => false, 'message' => 'Revise la categoría, los campos obligatorios, sus longitudes y el enlace PDF.'], 400);
         }
 
         try {
             $conexion = obtenerConexion();
+            $categoriaExiste = $conexion->prepare(
+                'SELECT 1 FROM vw_documentos_activos WHERE categoria_id = :categoria_id LIMIT 1'
+            );
+            $categoriaExiste->execute(['categoria_id' => $categoriaId]);
+            if (!$categoriaExiste->fetchColumn()) {
+                responder(['success' => false, 'message' => 'Seleccione una categoría válida.'], 400);
+            }
 
             // Esto crea un nuevo registro en la tabla
             $consulta = $conexion->prepare(
@@ -152,7 +176,10 @@ switch ($accion) {
         }
 
         $datos = cuerpoPeticion();
-        $id = (int)($datos['id'] ?? 0);
+        $idRecibido = $datos['id'] ?? null;
+        $id = is_string($idRecibido) || is_int($idRecibido)
+            ? filter_var($idRecibido, FILTER_VALIDATE_INT) : false;
+        $id = $id !== false && $id > 0 ? $id : 0;
         if ($id <= 0) {
             responder(['success' => false, 'message' => 'Falta el id del documento.'], 400);
         }

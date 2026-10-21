@@ -138,7 +138,31 @@
   // Envía el formulario para crear un documento nuevo
   formularioNuevoDocumento.addEventListener('submit', async (evento) => {
     evento.preventDefault();
+    if (!formularioNuevoDocumento.reportValidity()) return;
+
     const datos = new FormData(formularioNuevoDocumento);
+    const titulo = String(datos.get('titulo') || '').trim();
+    const especialista = String(datos.get('especialista') || '').trim();
+    const descripcion = String(datos.get('descripcion') || '').trim();
+    const archivoUrl = String(datos.get('archivo_url') || '').trim();
+    let enlaceWebValido = false;
+    try {
+      const url = new URL(archivoUrl);
+      enlaceWebValido = ['http:', 'https:'].includes(url.protocol)
+        && url.pathname.toLowerCase().endsWith('.pdf');
+    } catch {
+      enlaceWebValido = false;
+    }
+    const enlaceLocalValido = /^(\.\.\/Archivos\/)?[A-Za-z0-9_.%-]+\.pdf$/i.test(archivoUrl);
+    const enlaceValido = !archivoUrl || enlaceWebValido || enlaceLocalValido;
+
+    if (!titulo || titulo.length > 200 || !especialista || especialista.length > 160
+      || !descripcion || descripcion.length > 10000 || archivoUrl.length > 255 || !enlaceValido
+    ) {
+      mensajeFormularioDocumento.textContent = 'Revise los campos: texto obligatorio, límites de longitud y enlace PDF válido.';
+      mensajeFormularioDocumento.classList.add('visible');
+      return;
+    }
 
     try {
       const respuesta = await fetch(`${API_BASE}/documentos.php?action=create`, {
@@ -147,10 +171,10 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           categoria_id: datos.get('categoria_id'),
-          titulo: datos.get('titulo'),
-          especialista: datos.get('especialista'),
-          descripcion: datos.get('descripcion'),
-          archivo_url: datos.get('archivo_url'),
+          titulo,
+          especialista,
+          descripcion,
+          archivo_url: archivoUrl,
         }),
       });
       const resultado = await respuesta.json();
