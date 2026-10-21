@@ -100,6 +100,7 @@ Proyecto-Final/
 |       |-> sesion.js
 |
 |-> database/   # Scripts SQL
+|   |-> BDProyecto.sql
 |
 |-> README.md
 
