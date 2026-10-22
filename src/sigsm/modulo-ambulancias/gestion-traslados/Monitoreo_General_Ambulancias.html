@@ -6,8 +6,10 @@
     <title>S.I.G.S.M. - Panel de Ambulancias</title>
     <link rel="stylesheet" href="compartido.css">
     <link rel="stylesheet" href="Monitoreo_General_Ambulancias.css">
+    <script src="../../autenticacion/sesion.js" defer></script>
+    <script src="Monitoreo_General_Ambulancias.js" defer></script>
 </head>
-<body>
+<body data-roles="funcionario" data-login-url="../../autenticacion/index.html">
     <!-- Barra superior -->
     <header class="barra-superior">
         <div class="logo-header">
@@ -18,24 +20,39 @@
             </div>
         </div>
         <div class="info-usuario">
-            <span>Usuario: "Nombre"</span>
-            <a href="../../autenticacion/index.html" class="btn-logout">Cerrar Sesión</a>
+            <span id="nombreUsuario">Usuario</span>
+            <a href="../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
         </div>
     </header>
-
+    <!-- Menú principal -->
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="../../autenticacion/inicio_funcionario.html">Inicio</a></li>
+            <li><a href="../../modulo-documentacion/Funcionarios/documentos/Gestión_de_Documentación.html">Documentos</a></li>
+            <li><a href="../../modulo-documentacion/Funcionarios/encuestas/respuestas_encuestas.html">Resp. Encuestas</a></li>
+            <li><a href="Monitoreo_General_Ambulancias.html" class="activo">Ambulancias</a></li>
+        </ul>
+    </nav>
     <!-- Contenido -->
     <main class="contenedor-principal">
         <div class="ambulancias-header">
             <h2>Monitoreo General de la Flota</h2>
-            <a href="../registro-traslados/Formulario_traslado.html" class="btn-nuevo-traslado">+ Nuevo Traslado</a>
+            <a href="../registro-traslados/Formulario_traslado.html" id="enlaceNuevoTraslado" class="btn-nuevo-traslado" hidden>+ Nuevo Traslado</a>
+            <a href="../registro-traslados/Administracion_ambulancias.html" id="enlaceAdministracion" class="btn-nuevo-traslado" hidden>Administrar módulo</a>
         </div>
+        <section id="inicioAdministrativo" class="tarjeta" hidden>
+            <h3>Configuración inicial</h3>
+            <p>No hay una cuenta administrativa vinculada al módulo. La primera cuenta activa puede inicializar la administración.</p>
+            <button type="button" id="botonInicializarAdmin" class="btn-nuevo-traslado">Configurar esta cuenta</button>
+            <p id="mensajeInicializacion" role="status"></p>
+        </section>
         <section class="estadisticas">
             <div class="tarjeta">
-                <h3>4</h3>
+                <h3 id="movilesDisponibles">-</h3>
                 <p>Móviles disponibles</p>
             </div>
             <div class="tarjeta">
-                <h3>2</h3>
+                <h3 id="trasladosActivos">-</h3>
                 <p>En traslado activo</p>
             </div>
         </section>
@@ -47,34 +64,14 @@
                         <th>Móvil ID</th>
                         <th>Chofer Asignado</th>
                         <th>Destino / Servicio</th>
-                        <th>Estado Actual</th>
+                        <th>Estado actual</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Ambulancia 01</td>
-                        <td>Carlos Rodríguez</td>
-                        <td>Urgencias - Piso 1</td>
-                        <td><span class="estado en-camino">En Camino</span></td>
-                    </tr>
-                    <tr>
-                        <td>Ambulancia 02</td>
-                        <td>Juan Pérez</td>
-                        <td>Traslado Externo</td>
-                        <td><span class="estado en-camino">En Camino</span></td>
-                    </tr>
-                    <tr>
-                        <td>Ambulancia 03</td>
-                        <td>María Espósito</td>
-                        <td>Base Central</td>
-                        <td><span class="estado disponible">Disponible</span></td>
-                    </tr>
-                </tbody>
+                <tbody id="tablaFlota"></tbody>
             </table>
         </section>
         <section class="acceso-rapido">
             <a href="../registro-traslados/Panel_traslados_activos.html" class="tarjeta-rapida">
-                <span class="icono">🚦</span>
                 <h4>Traslados Activos</h4>
                 <p>Ver panel de traslados en curso</p>
             </a>

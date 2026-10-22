@@ -1,12 +1,12 @@
 /*
 Estilos compartidos por todas las pantallas del sistema:
-- header, menú de navegación y footer.
-- Cada pantalla tiene además su propio CSS con estilos específicos.
+- header, menú de navegación y footer
+- Cada pantalla tiene además su propio CSS con estilos específicos
 */
 
 /*
 Importante aclarar:
-Para poder leer bien los comentarios ten en cuenta que se verían así:
+Para poder leer bien los comentarios pensa que se verían así:
 
 Titulo 
 Comentario (opcional)
@@ -27,7 +27,7 @@ Esto es para reiniciar los márgenes y paddings de toda la página y evitar desc
 
 /*
 Asegura que la página ocupe toda la altura disponible y que el contenido
-pueda organizarse verticalmente con el footer siempre al final.
+pueda organizarse verticalmente con el footer siempre al final
 */
 html, body {
     height: 100%;
@@ -42,8 +42,8 @@ body {
 }
 
 /*
-Cabecera principal del sistema: fondo azul, título y datos del usuario.
-Se usa flex para distribuir el logo, nombre del sistema y la información del usuario.
+Cabecera principal del sistema: fondo azul, título y datos del usuario
+Se usa flex para distribuir el logo, nombre del sistema y la información del usuario
 */
 .barra-superior {
     background: #003d82;
@@ -88,7 +88,7 @@ Se usa flex para distribuir el logo, nombre del sistema y la información del us
 }
 
 /*
-(Estilos para los botones de acceso, ingreso y cierre de sesión)
+Estilos para los botones de acceso, ingreso y cierre de sesión
 */
 .btn-login,
 .btn-logout,
@@ -102,7 +102,6 @@ Se usa flex para distribuir el logo, nombre del sistema y la información del us
     border-radius: 5px;
     font-weight: bold;
     display: inline-block;
-    transition: background 0.2s ease;
 }
 
 .btn-login:hover,
@@ -130,7 +129,7 @@ Se usa flex para distribuir el logo, nombre del sistema y la información del us
 
 /*
 (Menú principal del sistema) Se muestra como una barra horizontal con enlaces que 
-cambian de color al pasar el mouse o cuando están activos.
+cambian de color al pasar el mouse o cuando están activos
 */
 .menu-principal {
     background: white;
@@ -144,7 +143,6 @@ cambian de color al pasar el mouse o cuando están activos.
 }
 
 .menu-principal a {
-    display: block;
     padding: 15px 20px;
     text-decoration: none;
     color: #333;
@@ -159,7 +157,7 @@ cambian de color al pasar el mouse o cuando están activos.
 /*
 (Contenedor central de la página y bloques de títulos)
 Limita el ancho del contenido y centra la sección principal para mantener
-una apariencia ordenada en todas las pantallas.
+una apariencia ordenada en todas las pantallas
 */
 .contenedor-principal {
     width: 90%;
@@ -192,7 +190,7 @@ main {
 /*
 (Pie de página del sistema) 
 Usa fondo azul oscuro para diferenciarlo del contenido principal 
-y muestra información en una columna.
+y muestra información en una columna
 */
 .pie-pagina {
     background: #003d82;
@@ -229,8 +227,8 @@ y muestra información en una columna.
 }
 
 /*
-Clase útil para centrar contenido dentro de un contenedor.
-Usa flexbox para alinear el contenido tanto horizontal como verticalmente.
+Clase útil para centrar contenido dentro de un contenedor
+Usa flexbox para alinear el contenido tanto horizontal como verticalmente
 */
 .centrado {
     display: flex;
@@ -242,7 +240,7 @@ Usa flexbox para alinear el contenido tanto horizontal como verticalmente.
 
 /*
 Ajustes responsivos para pantallas pequeñas.
-Se arreglan el header, el menú y el footer para poderse leer en teléfono.
+Se arreglan el header, el menú y el footer para poderse leer en el celular
 */
 @media (max-width: 768px) {
 

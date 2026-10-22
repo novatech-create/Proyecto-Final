@@ -23,25 +23,82 @@ S.I.G.S.M. es un sistema web desarrollado para el **Hospital de Clínicas** que 
 - **Servidor:** Rocky Linux 9.7
 - **Control de versiones:** Git / GitHub
 
-# Estructura del repositorio
+# Estructura actual del repositorio
 
-Proyecto-HospitalDeClinicas/
+Proyecto-Final/
 |
 |-> docs/    # Documentación por entrega
 |   |-> primera-entrega/
 |
 |-> src/  # Código fuente
-|  |->sigsm/
-|     |
-|     |-> modulo-documentacion/
-|     |   |-> PanelAdmin/     # Panel de administración
-|     |   |-> QR/             # Vista accesible por QR
-|     |   |-> Encuestas/      # Formulario de encuesta y confirmación
-|     |-> modulo-ambulancias/
-|         |-> Gestión de Traslados/      # Panel de gestión de traslados
-|         |-> Formulario de Traslado/    # Alta de nuevo traslado
-|         |-> Seguimiento/               # Seguimiento de estado
-| 
+|   |-> api/
+|   |  |-> auth.php
+|   |  |-> cabeceras.php
+|   |  |-> conexion.php
+|   |  |-> documentos.php
+|   |  |-> encuestas.php
+|   |
+|   |-> imagenes/
+|   |   |-> Logo_Hc.jpg # Logo del hospital
+|   |
+|   |-> Archivos/ # Para futuros archivos
+|   | 
+|   |-> modulo-documentacion/
+|   │   |-> Documentos/     
+|   │   |   |-> compartido.css
+|   │   |   |-> documento.css
+|   │   |   |-> documento.html
+|   │   |   |-> documento.js
+|   │   |   
+|   │   |-> Funcionarios/  
+|   │   |   |-> documentos/
+|   │   |   |   |-> PrevistaDocumentos/
+|   │   |   |   |   |-> AdmDocumento.html
+|   │   |   |   |   |-> compartido.css
+|   │   |   |   |   |-> documento.css
+|   │   |   |   |   |-> documento.js
+|   │   |   |   |
+|   │   |   |   |-> compartido.css
+|   │   |   |   |-> documentos.js
+|   │   |   |   |-> Gestión_de_documentación.css
+|   │   |   |   |-> Gestión_de_documentación.html
+|   │   |   |
+|   │   |   |-> encuestas/
+|   │   |       |-> compartido.css
+|   │   |       |-> respuestas.js
+|   │   |       |-> respuestas_encuestas.css
+|   │   |       |-> respuestas_encuestas.html
+|   │   |       
+|   │   |-> Pacientes/  
+|   │       |-> compartido.css
+|   │       |-> encuesta.css
+|   │       |-> Encuesta.html
+|   │       |-> encuesta.js
+|   │       |-> gracias_por_encuesta.css
+|   │       |-> gracias_por_encuesta.html
+|   |
+|   |-> modulo-ambulancias/
+|   |    |-> gestion_traslados/
+|   |    │   |-> compartido.css
+|   |    │   |-> Monitoreo_General_Ambulancias.css
+|   |    │   |-> Monitoreo_General_Ambulancias.html
+|   |    │
+|   |    |-> registro-traslados/   
+|   |        |-> compartido.css       
+|   |        |-> formulario_traslado.css       
+|   |        |-> Formulario_traslado.html       
+|   |        |-> Panel_traslados_activos.css       
+|   |        |-> Panel_traslados_activos.html       
+|   |
+|   |-> autenticacion/
+|       |-> auth.js
+|       |-> compartido.css
+|       |-> index.css
+|       |-> index.html
+|       |-> inicio_funcionario.css
+|       |-> inicio_funcionario.html
+|       |-> sesion.js
+|
 |-> database/   # Scripts SQL
 |   |-> BDProyecto.sql
 |

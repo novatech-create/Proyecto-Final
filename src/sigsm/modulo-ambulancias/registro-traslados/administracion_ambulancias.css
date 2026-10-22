@@ -1,0 +1,148 @@
+.admin-transporte {
+    max-width: 1180px;
+    margin: 30px auto;
+    padding: 0 20px 48px;
+}
+
+.admin-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.admin-titulo h2,
+.formulario-admin h3,
+.lista-personal h3,
+.catalogos-admin h3 {
+    color: #003d82;
+}
+
+.admin-titulo p {
+    margin: 6px 0 0;
+}
+
+.btn-volver,
+.formulario-admin button {
+    display: inline-block;
+    border: 0;
+    background: #003d82;
+    color: white;
+    text-decoration: none;
+    padding: 10px 14px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.admin-columnas {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
+    align-items: start;
+    gap: 20px;
+}
+
+.columna-configuracion {
+    display: grid;
+    gap: 20px;
+}
+
+.formulario-admin,
+.lista-personal,
+.catalogos-admin > div {
+    background: white;
+    border: 1px solid #c7d0d8;
+    padding: 20px;
+}
+
+.formulario-admin {
+    display: grid;
+    gap: 9px;
+}
+
+.formulario-admin h3,
+.lista-personal h3,
+.catalogos-admin h3 {
+    margin: 0 0 8px;
+}
+
+.formulario-admin label,
+.formulario-admin legend {
+    font-weight: 600;
+}
+
+.formulario-admin input:not([type="checkbox"]),
+.formulario-admin textarea {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border: 1px solid #8795a1;
+    font: inherit;
+}
+
+.formulario-admin fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    border: 1px solid #c7d0d8;
+    padding: 12px;
+}
+
+.formulario-admin fieldset label,
+.formulario-admin .opcion {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.lista-personal,
+.catalogos-admin {
+    margin-top: 22px;
+}
+
+.tabla-desborde {
+    overflow-x: auto;
+}
+
+.lista-personal table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lista-personal th,
+.lista-personal td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #d9e0e6;
+}
+
+.lista-personal th {
+    background: #003d82;
+    color: white;
+}
+
+.catalogos-admin {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.catalogos-admin ul {
+    padding-left: 20px;
+}
+
+#mensajeAdmin {
+    min-height: 1.5em;
+}
+
+@media (max-width: 720px) {
+    .admin-columnas,
+    .catalogos-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-titulo {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

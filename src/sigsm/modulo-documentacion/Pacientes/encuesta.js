@@ -21,6 +21,7 @@ if (servicioSugerido) {
 
 formulario.addEventListener('submit', async (evento) => {
   evento.preventDefault();
+  if (!formulario.reportValidity()) return;
 
   mensajeError.textContent = '';
   mensajeError.classList.remove('visible');
@@ -30,9 +31,21 @@ formulario.addEventListener('submit', async (evento) => {
   const datosSatisfaccion = datos.get('datosSatisfaccion');
   const comprension = datos.get('p2');
   const utilidad = datos.get('p3');
+  const comentario = campoComentarios.value.trim();
+  const serviciosValidos = ['Cardiología', 'Nefrología', 'Trasplante', 'Imagenología', 'Neurología', 'Urología'];
+  const calificacionesValidas = ['Excelente', 'Buena', 'Regular', 'Mala'];
+  const comprensionesValidas = ['Si', 'Parcialmente', 'No'];
+  const utilidadesValidas = ['Muy util', 'Util', 'Poco util', 'Nada util'];
+  const idDocumentoValido = documentoId === null || /^[1-9][0-9]*$/.test(documentoId);
 
-  if (!calificacionInfo || !datosSatisfaccion || !comprension || !utilidad) {
-    mensajeError.textContent = 'Por favor responda todas las preguntas obligatorias.';
+  if (!serviciosValidos.includes(campoServicio.value)
+    || !calificacionesValidas.includes(calificacionInfo)
+    || !/^[1-5]$/.test(String(datosSatisfaccion || ''))
+    || !comprensionesValidas.includes(comprension)
+    || !utilidadesValidas.includes(utilidad)
+    || comentario.length > 2000 || !idDocumentoValido
+  ) {
+    mensajeError.textContent = 'Revise las respuestas obligatorias y el límite de 2000 caracteres del comentario.';
     mensajeError.classList.add('visible');
     return;
   }
@@ -50,7 +63,7 @@ formulario.addEventListener('submit', async (evento) => {
         datosSatisfaccion: Number(datosSatisfaccion),
         comprension,
         utilidad,
-        comentario: campoComentarios.value.trim(),
+        comentario,
         documento_id: documentoId,
       }),
     });
