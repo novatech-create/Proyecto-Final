@@ -13,7 +13,8 @@
   // Si el usuario es funcionario, va al inicio del funcionario; si es paciente, va a su inicio
   const RUTAS_POR_ROL = {
     funcionario: 'inicio_funcionario.html',
-    paciente: 'inicio_pacientes.html',
+    administrador: 'administracion.html',
+    medico: 'revision_medica.html',
   };
 
   // Cuando el usuario envía el formulario, se ejecuta esta lógica
@@ -54,7 +55,7 @@
         throw new Error(resultado.message || 'No se pudo iniciar sesión.');
       }
 
-      localStorage.setItem('auth_token', resultado.token);
+      localStorage.removeItem('auth_token');
 
       // Guarda el nombre para mostrarlo en otras pantallas
       if (resultado.nombre) {

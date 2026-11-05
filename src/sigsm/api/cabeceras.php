@@ -1,69 +1,22 @@
 <?php
 declare(strict_types=1);
 
-// Sesión compartida por todos (login, rol activo, etc.)
+const DURACION_SESION = 30 * 24 * 60 * 60;
+
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    session_start([
+        'use_strict_mode' => 1,
+        'use_only_cookies' => 1,
+        'gc_maxlifetime' => DURACION_SESION,
+        'cookie_lifetime' => DURACION_SESION,
+        'cookie_path' => '/sigsm/',
+        'cookie_httponly' => true,
+        'cookie_samesite' => 'Lax',
+        'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    ]);
 }
 
-function tokenAutorizacion(): ?string
-{
-    $cabecera = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    if (!preg_match('/^Bearer\s+([a-f0-9]{64})$/i', trim($cabecera), $coincidencias)) {
-        return null;
-    }
-    return $coincidencias[1];
-}
-
-function restaurarSesionDesdeToken(): void
-{
-    if (isset($_SESSION['usuario_id'])) {
-        return;
-    }
-
-    $token = tokenAutorizacion();
-    if ($token === null) {
-        return;
-    }
-
-    require_once __DIR__ . '/conexion.php';
-    try {
-        $conexion = obtenerConexion();
-        $consulta = $conexion->prepare(
-            'SELECT u.id, u.nombre, u.rol
-             FROM auth_tokens t
-             JOIN usuarios u ON u.id = t.usuario_id
-             WHERE t.token_hash = :token_hash
-               AND t.expires_at > UNIX_TIMESTAMP()
-               AND u.activo = 1'
-        );
-        $consulta->execute(['token_hash' => hash('sha256', $token)]);
-        $usuario = $consulta->fetch();
-        if ($usuario) {
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['nombre'] = $usuario['nombre'];
-            $_SESSION['rol'] = $usuario['rol'];
-        }
-    } catch (Throwable $error) {
-        return;
-    }
-}
-
-// CORS: permite que el frontend pueda llamar a la API y mantener la sesión
-$origen = $_SERVER['HTTP_ORIGIN'] ?? '*';
-header("Access-Control-Allow-Origin: {$origen}");
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
-
-restaurarSesionDesdeToken();
-
 // Envía una respuesta JSON y termina la ejecución.
 function responder(array $payload, int $codigo = 200): void
 {

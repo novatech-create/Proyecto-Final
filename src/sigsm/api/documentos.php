@@ -15,15 +15,18 @@ $accion = $_GET['action'] ?? $_POST['action'] ?? '';
 switch ($accion) {
 
     // Esto es para obtener todos los documentos activos, agrupados por categoría
+    case 'gestion':
+        exigirRol(['funcionario']);
     case 'getall':
+        $filtro = $accion === 'gestion' ? '' : " AND d.estado_revision = 'aprobado'";
         try {
             $conexion = obtenerConexion();
             $consulta = $conexion->query(
                 
-                'SELECT id, titulo, descripcion, especialista, archivo_url, peso_kb,
-                    fecha_actualizacion, categoria_id, categoria_nombre
-                 FROM vw_documentos_activos
-                 ORDER BY categoria_nombre ASC, fecha_actualizacion DESC'
+                "SELECT d.*, c.id AS categoria_id, c.nombre AS categoria_nombre
+                 FROM categorias_documentos c
+                 LEFT JOIN documentos d ON d.categoria_id = c.id AND d.activo = 1 ${filtro}
+                 ORDER BY c.nombre, d.fecha_actualizacion DESC"
             );
             
             // Guarda todas las filas resultantes en un array asociativo
@@ -40,12 +43,20 @@ switch ($accion) {
                         'documentos' => [],
                     ];
                 }
+                if ($fila['id'] === null) {
+                    continue;
+                }
                 $categorias[$idCategoria]['documentos'][] = [
                     'id' => $fila['id'],
                     'titulo' => $fila['titulo'],
+                    'estado_revision' => $fila['estado_revision'],
+                    'motivo_rechazo' => $fila['motivo_rechazo'],
+                    'puede_reenviar' => $accion === 'gestion' && $fila['estado_revision'] === 'rechazado'
+                        && (int)$fila['creado_por'] === (int)$_SESSION['usuario_id'],
                     'descripcion' => $fila['descripcion'],
                     'especialista' => $fila['especialista'],
-                    'archivo_url' => $fila['archivo_url'],
+                    'archivo_url' => $fila['archivo_url'] === '' ? '' : '/sigsm/api/archivo_documento.php?id=' . $fila['id'],
+                    'archivo_origen' => $accion === 'gestion' ? $fila['archivo_url'] : null,
                     'peso_kb' => $fila['peso_kb'],
                     'fecha_actualizacion' => $fila['fecha_actualizacion'],
                     'categoria_nombre' => $fila['categoria_nombre'],
@@ -60,7 +71,10 @@ switch ($accion) {
         break;
 
     // Es para devolver un único documento según su id
+    case 'vista_interna':
+        exigirRol(['funcionario']);
     case 'get':
+        $filtro = $accion === 'get' ? " AND d.estado_revision = 'aprobado'" : '';
 
         // Toma el id del navegador y la pasa a int
         $idRecibido = $_GET['id'] ?? null;
@@ -76,10 +90,10 @@ switch ($accion) {
         // Busca un documento activo por su id, junto con su categoría
             $conexion = obtenerConexion();
             $consulta = $conexion->prepare(
-                'SELECT id, titulo, descripcion, especialista, archivo_url, peso_kb,
-                    fecha_actualizacion, categoria_nombre
-                 FROM vw_documentos_activos
-                 WHERE id = :id'
+                "SELECT d.id, d.titulo, d.descripcion, d.especialista, d.archivo_url, d.peso_kb,
+                        d.fecha_actualizacion, d.estado_revision, c.nombre AS categoria_nombre
+                 FROM documentos d JOIN categorias_documentos c ON c.id = d.categoria_id
+                 WHERE d.id = :id AND d.activo = 1 ${filtro}"
             );
             $consulta->execute(['id' => $id]);
             $documento = $consulta->fetch();
@@ -88,6 +102,9 @@ switch ($accion) {
             if (!$documento) {
                 responder(['success' => false, 'message' => 'Documento no encontrado.'], 404);
             }
+            if ($documento['archivo_url'] !== '') {
+                $documento['archivo_url'] = '/sigsm/api/archivo_documento.php?id=' . $id;
+            }
             responder(['success' => true, 'data' => $documento]);
         } catch (Throwable $error) {
             responder(['success' => false, 'message' => 'No fue posible consultar el documento.'], 500);
@@ -95,6 +112,7 @@ switch ($accion) {
         break;
 
     // Solo permite crear documentos si el usuario tiene el rol "Funcionario" 
+    case 'reenviar':
     case 'create':
         exigirRol(['funcionario']);
 
@@ -136,14 +154,42 @@ switch ($accion) {
             responder(['success' => false, 'message' => 'Revise la categoría, los campos obligatorios, sus longitudes y el enlace PDF.'], 400);
         }
 
+        if ($accion === 'reenviar') {
+            $id = filter_var($datos['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if ($id === false) {
+                responder(['success' => false, 'message' => 'Identificador inválido.'], 400);
+            }
+        }
+
         try {
             $conexion = obtenerConexion();
             $categoriaExiste = $conexion->prepare(
-                'SELECT 1 FROM vw_documentos_activos WHERE categoria_id = :categoria_id LIMIT 1'
+                'SELECT 1 FROM categorias_documentos WHERE id = :categoria_id'
             );
             $categoriaExiste->execute(['categoria_id' => $categoriaId]);
             if (!$categoriaExiste->fetchColumn()) {
                 responder(['success' => false, 'message' => 'Seleccione una categoría válida.'], 400);
+            }
+
+            if ($accion === 'reenviar') {
+                $consulta = $conexion->prepare(
+                    "UPDATE documentos
+                     SET categoria_id = :categoria, titulo = :titulo, descripcion = :descripcion,
+                         especialista = :especialista, archivo_url = :archivo, peso_kb = :peso,
+                         estado_revision = 'pendiente', revisado_por = NULL,
+                         revisado_en = NULL, motivo_rechazo = NULL
+                     WHERE id = :id AND activo = 1 AND estado_revision = 'rechazado'
+                       AND creado_por = :autor"
+                );
+                $consulta->execute([
+                    'categoria' => $categoriaId, 'titulo' => $titulo, 'descripcion' => $descripcion,
+                    'especialista' => $especialista, 'archivo' => $archivoUrl, 'peso' => $pesoKb,
+                    'id' => $id, 'autor' => $_SESSION['usuario_id'],
+                ]);
+                if ($consulta->rowCount() !== 1) {
+                    responder(['success' => false, 'message' => 'Solo el autor puede reenviar un documento rechazado.'], 409);
+                }
+                responder(['success' => true]);
             }
 
             // Esto crea un nuevo registro en la tabla

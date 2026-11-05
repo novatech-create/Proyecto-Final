@@ -61,7 +61,7 @@ switch ($accion) {
             $conexion = obtenerConexion();
             if ($documentoId !== null) {
                 $documentoExiste = $conexion->prepare(
-                    'SELECT 1 FROM vw_documentos_activos WHERE id = :id LIMIT 1'
+                    "SELECT 1 FROM documentos WHERE id = :id AND activo = 1 AND estado_revision = 'aprobado'"
                 );
                 $documentoExiste->execute(['id' => $documentoId]);
                 if (!$documentoExiste->fetchColumn()) {

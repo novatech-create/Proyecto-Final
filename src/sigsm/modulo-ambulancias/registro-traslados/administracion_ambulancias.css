@@ -25,14 +25,21 @@
 
 .btn-volver,
 .formulario-admin button {
-    display: inline-block;
-    border: 0;
     background: #003d82;
     color: white;
     text-decoration: none;
-    padding: 10px 14px;
+    padding: 10px 18px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+}
+.formulario-admin button:hover,
+.btn-volver:hover {
+    background: #002c5d;
     cursor: pointer;
-    font: inherit;
+}
+.formulario-admin button:active {
+    background: #001838;
 }
 
 .admin-columnas {

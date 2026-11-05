@@ -26,7 +26,7 @@
 
     try {
       // Peide el documento por id a la API
-      const respuesta = await fetch(`${API_BASE}/documentos.php?action=get&id=${encodeURIComponent(id)}`);
+      const respuesta = await fetch(`${API_BASE}/documentos.php?action=vista_interna&id=${encodeURIComponent(id)}`);
       const resultado = await respuesta.json();
 
       if (!respuesta.ok || !resultado.success) {
@@ -45,11 +45,11 @@
       // Genera la URL para que el QR lleve a la página de documentos 
       const urlDocumento = `${window.location.origin}/sigsm/modulo-documentacion/Documentos/documento.html?id=${documento.id}`;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlDocumento)}`;
-      if (qrDocumento) {
+      if (qrDocumento && documento.estado_revision === 'aprobado') {
         qrDocumento.src = qrUrl;
         qrDocumento.alt = `QR para ${documento.titulo}`;
       }
-      if (contenedorQr) {
+      if (contenedorQr && documento.estado_revision === 'aprobado') {
         contenedorQr.classList.remove('oculto');
       }
 

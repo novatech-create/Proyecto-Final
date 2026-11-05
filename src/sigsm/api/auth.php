@@ -3,11 +3,10 @@ declare(strict_types=1);
 // Este es el archivo que se encarga de la autenticación
 // Recibe usuario y contraseña
 // Busca usuario en la BD y compara la contraseña
-// Si es correcto la sesión se guarda en local (Por eso se pierde al cerrar el navegador)
 // Luego con eso se puede saber quién está logueado y cerrar sesión
 
 
-// Se requiere el archivo de cabeceras para permitir CORS y establecer el tipo de contenido como JSON
+// Se requiere el archivo de cabeceras para iniciar la sesión y establecer el tipo de contenido como JSON
 // Aparte también se requiere la conexión a la base de datos para poder consultar los usuarios
 // Y con require_once aseguramos que cargue una sola vez
 require_once __DIR__ . '/cabeceras.php';
@@ -73,24 +72,10 @@ switch ($accion) {
                 ]);
             }
 
-            // Acá está el token para que el navegador lo guarde y lo envíe en cada petición, 
-            //así se puede mantener la sesión aunque se cierre el navegador como pidió el profesor. 
-            //El token se guarda en la BD con un hash SHA256 para que no se pueda adivinar y se le pone una fecha de expiración de 30 días. 
-            //Luego se devuelve el token al navegador para que lo guarde y lo envíe en cada petición.
-            $token = bin2hex(random_bytes(32));
-            $expira = time() + (30 * 24 * 60 * 60);
-            $guardarToken = $conexion->prepare(
-                'INSERT INTO auth_tokens (token_hash, usuario_id, expires_at)
-                 VALUES (:token_hash, :usuario_id, :expires_at)'
-            );
-            $guardarToken->execute([
-                'token_hash' => hash('sha256', $token),
-                'usuario_id' => $usuario['id'],
-                'expires_at' => $expira,
-            ]);
-
             // Regenerar el id de sesión al loguear
-            session_regenerate_id(true);
+            if (!session_regenerate_id(true)) {
+                responder(['success' => false, 'message' => 'No fue posible iniciar la sesión.'], 500);
+            }
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['nombre'] = $usuario['nombre'];
             $_SESSION['rol'] = $usuario['rol'];
@@ -100,7 +85,6 @@ switch ($accion) {
                 'success' => true,
                 'nombre' => $usuario['nombre'],
                 'rol' => $usuario['rol'],
-                'token' => $token,
             ]);
 
             // Si hay algún error en la conexión a la BD o en la consulta se da un error 500 para luego break terminar el caso del switch
@@ -110,7 +94,7 @@ switch ($accion) {
         break;
 
     case 'register':
-        exigirRol(['funcionario']);
+        exigirRol(['administrador']);
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             responder(['success' => false, 'message' => 'Usa POST.'], 405);
         }
@@ -164,6 +148,7 @@ switch ($accion) {
         if (!isset($_SESSION['usuario_id'])) {
             responder(['success' => true, 'autenticado' => false]);
         }
+        exigirRol(['funcionario', 'administrador', 'medico']);
         responder([
             'success' => true,
             'autenticado' => true,
@@ -172,20 +157,12 @@ switch ($accion) {
         ]);
         break;
 
-    // Cierra la sesión del usuario logueado y elimina el token de la BD para que no se pueda usar más
+    // Cierra la sesión del usuario.
     case 'logout':
-        $token = tokenAutorizacion();
-        if ($token !== null) {
-            try {
-                $conexion = obtenerConexion();
-                $eliminarToken = $conexion->prepare(
-                    'DELETE FROM auth_tokens WHERE token_hash = :token_hash'
-                );
-                $eliminarToken->execute(['token_hash' => hash('sha256', $token)]);
-            } catch (Throwable $error) {
-                responder(['success' => false, 'message' => 'No fue posible cerrar la sesión.'], 500);
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            responder(['success' => false, 'message' => 'Usa POST.'], 405);
         }
+
         $_SESSION = [];
         if (ini_get('session.use_cookies')) {
             $parametros = session_get_cookie_params();

@@ -27,7 +27,7 @@
         <header class="admin-titulo">
             <div>
                 <h2>Administración del transporte</h2>
-                <p>Personal, credenciales, vehículos y rutas</p>
+                <p>Personal, vehículos y rutas para registrar traslados</p>
             </div>
             <a href="../gestion-traslados/Monitoreo_General_Ambulancias.html" class="btn-volver">Volver al monitoreo</a>
         </header>
@@ -36,20 +36,16 @@
 
         <section class="admin-columnas">
             <form id="formularioPersonal" class="formulario-admin">
-                <h3>Crear cuenta y perfiles</h3>
-                <label for="Documento">Documento</label>
-                <input id="Documento" name="Documento" inputmode="numeric" pattern="[0-9]{1,20}" maxlength="20" required>
+                <h3>Registrar personal</h3>
+                <p>Estos datos se usan para seleccionar personal al registrar un traslado.</p>
                 <label for="Nombre">Nombre completo</label>
                 <input id="Nombre" name="Nombre" maxlength="150" required>
-                <label for="Clave">Contraseña inicial</label>
-                <input id="Clave" name="Clave" type="password" minlength="10" maxlength="72" autocomplete="new-password" required>
 
                 <fieldset>
                     <legend>Perfiles</legend>
                     <label><input type="checkbox" name="Perfil" value="chofer"> Chofer</label>
                     <label><input type="checkbox" name="Perfil" value="enfermero"> Enfermero</label>
                     <label><input type="checkbox" name="Perfil" value="medico"> Médico</label>
-                    <label><input type="checkbox" name="Perfil" value="administrativo"> Administrativo</label>
                 </fieldset>
                 <label for="TipoLicencia">Tipo de licencia (si es chofer)</label>
                 <input id="TipoLicencia" name="TipoLicencia" maxlength="30">
@@ -57,7 +53,7 @@
                 <input id="Especialidad" name="Especialidad" maxlength="120">
                 <label for="Telefonos">Teléfonos (uno por línea)</label>
                 <textarea id="Telefonos" name="Telefonos" rows="2" maxlength="300"></textarea>
-                <button type="submit">Crear cuenta</button>
+                <button type="submit">Guardar personal</button>
             </form>
 
             <div class="columna-configuracion">
@@ -84,10 +80,10 @@
         </section>
 
         <section class="lista-personal">
-            <h3>Personal vinculado</h3>
+            <h3>Personal registrado</h3>
             <div class="tabla-desborde">
                 <table>
-                    <thead><tr><th>Nombre</th><th>Documento</th><th>Perfiles</th><th>Estado</th><th>Acción</th></tr></thead>
+                    <thead><tr><th>Nombre</th><th>Perfiles</th></tr></thead>
                     <tbody id="tablaPersonal"></tbody>
                 </table>
             </div>

@@ -1,0 +1,152 @@
+/* Tarjetas y controles de los paneles de administración y revisión. */
+.panel-roles {
+    align-items: stretch;
+    text-align: left;
+}
+
+.panel-roles .titulo-pagina {
+    text-align: center;
+}
+
+.panel-tarjeta,
+.panel-registros li {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.panel-tarjeta {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.panel-tarjeta h2,
+.panel-registros li > p:first-child,
+.panel-roles a {
+    color: #003d82;
+}
+
+.panel-tarjeta label {
+    display: grid;
+    gap: 6px;
+    font-weight: bold;
+}
+
+.panel-tarjeta input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font: inherit;
+}
+
+.panel-roles button {
+    justify-self: start;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 5px;
+    background: #003d82;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.panel-roles button:hover {
+    background: #002c5d;
+}
+
+.panel-roles :focus-visible {
+    outline: 2px solid #003d82;
+    outline-offset: 3px;
+}
+
+.panel-registros {
+    display: grid;
+    gap: 12px;
+    list-style: none;
+}
+
+.panel-registros li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    overflow-wrap: anywhere;
+}
+
+.panel-registros p {
+    flex-basis: 100%;
+}
+
+.panel-registros li > p:first-child {
+    font-weight: bold;
+}
+
+#estado:not(:empty) {
+    margin: 15px 0;
+}
+
+@media (max-width: 480px) {
+    .panel-tarjeta,
+    .panel-registros li {
+        padding: 15px;
+    }
+
+    .panel-roles button {
+        width: 100%;
+    }
+}
+
+/* Lectura y controles cómodos en escritorio y en el teléfono. */
+.panel-roles {
+    font-size: 18px;
+    line-height: 1.5;
+    gap: 16px;
+}
+
+.panel-roles .titulo-pagina {
+    margin-bottom: 0;
+}
+
+.panel-roles .titulo-pagina h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.panel-roles .titulo-pagina p {
+    color: #46566a;
+}
+
+.panel-roles button,
+.panel-roles .panel-accion {
+    min-height: 48px;
+    font: inherit;
+    font-weight: bold;
+}
+
+.panel-roles .panel-accion {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid #003d82;
+    border-radius: 5px;
+}
+
+.panel-tarjeta input {
+    min-height: 48px;
+}
+
+.panel-registros li > p:first-child {
+    font-size: 1.15em;
+}
+
+.panel-roles .accion-rechazar {
+    color: #8d2525;
+    background: white;
+    border: 1px solid currentColor;
+}
+
+.panel-roles .accion-rechazar:hover {
+    background: #fff1f1;
+}

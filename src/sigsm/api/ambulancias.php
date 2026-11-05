@@ -4,64 +4,40 @@ declare(strict_types=1);
 require_once __DIR__ . '/cabeceras.php';
 require_once __DIR__ . '/conexion.php';
 
+$accion = is_string($_GET['action'] ?? null) ? $_GET['action'] : '';
 exigirRol(['funcionario']);
 $conexion = obtenerConexion();
-$accion = is_string($_GET['action'] ?? null) ? $_GET['action'] : '';
 
-function funcionarioActual(PDO $conexion): ?array
+// Se llama dentro de la transacción que registra el traslado.
+function responsableTraslado(PDO $conexion): int
 {
-    $consulta = $conexion->prepare(
-        'SELECT f.IdFuncionario, f.Nombre, fc.IdUsuarioFK,
-            EXISTS(SELECT 1 FROM ADMINISTRATIVO a WHERE a.IdFuncionarioFK = f.IdFuncionario) AS EsAdministrativo,
-            EXISTS(SELECT 1 FROM CHOFER c WHERE c.IdFuncionarioFK = f.IdFuncionario) AS EsChofer,
-            EXISTS(SELECT 1 FROM ENFERMERO e WHERE e.IdFuncionarioFK = f.IdFuncionario) AS EsEnfermero,
-            EXISTS(SELECT 1 FROM MEDICO m WHERE m.IdFuncionarioFK = f.IdFuncionario) AS EsMedico
-         FROM FUNCIONARIO_CUENTA fc
-         JOIN FUNCIONARIO f ON f.IdFuncionario = fc.IdFuncionarioFK
-         JOIN usuarios u ON u.id = fc.IdUsuarioFK
-         WHERE fc.IdUsuarioFK = :usuario AND u.activo = 1
-         LIMIT 1'
+    $usuario = $conexion->prepare(
+        "SELECT nombre FROM usuarios WHERE id = :id AND activo = 1 AND rol = 'funcionario' FOR UPDATE"
     );
-    $consulta->execute(['usuario' => $_SESSION['usuario_id']]);
-    $funcionario = $consulta->fetch();
-    return $funcionario ?: null;
-}
-
-function exigirFuncionario(PDO $conexion): array
-{
-    $funcionario = funcionarioActual($conexion);
-    if (!$funcionario) {
-        responder(['success' => false, 'message' => 'La cuenta todavía no está vinculada a un perfil de funcionario.'], 403);
+    $usuario->execute(['id' => $_SESSION['usuario_id']]);
+    $nombre = $usuario->fetchColumn();
+    if ($nombre === false) {
+        $conexion->rollBack();
+        responder(['success' => false, 'message' => 'La cuenta ya no tiene permiso para registrar traslados.'], 403);
     }
-    return $funcionario;
-}
 
-function exigirAdministrativo(PDO $conexion): array
-{
-    $funcionario = exigirFuncionario($conexion);
-    if ((int)$funcionario['EsAdministrativo'] !== 1) {
-        responder(['success' => false, 'message' => 'Esta acción requiere perfil administrativo.'], 403);
+    $vinculo = $conexion->prepare(
+        'SELECT IdFuncionarioFK FROM FUNCIONARIO_CUENTA WHERE IdUsuarioFK = :usuario FOR UPDATE'
+    );
+    $vinculo->execute(['usuario' => $_SESSION['usuario_id']]);
+    $idFuncionario = $vinculo->fetchColumn();
+    if ($idFuncionario !== false) {
+        return (int)$idFuncionario;
     }
-    return $funcionario;
-}
 
-function esPersonalAsignado(array $traslado, array $funcionario): bool
-{
-    $id = (int)$funcionario['IdFuncionario'];
-    return ((int)$funcionario['EsChofer'] === 1 && (int)$traslado['IdChoferFK'] === $id)
-        || ((int)$funcionario['EsEnfermero'] === 1 && (int)($traslado['IdEnfermeroFK'] ?? 0) === $id)
-        || ((int)$funcionario['EsMedico'] === 1 && (int)($traslado['IdMedicoFK'] ?? 0) === $id);
-}
-
-function filtrarTrasladosPorPerfil(array $traslados, array $funcionario): array
-{
-    if ((int)$funcionario['EsAdministrativo'] === 1) {
-        return $traslados;
-    }
-    return array_values(array_filter(
-        $traslados,
-        static fn(array $traslado): bool => esPersonalAsignado($traslado, $funcionario),
-    ));
+    $crear = $conexion->prepare('INSERT INTO FUNCIONARIO (Nombre) VALUES (:nombre)');
+    $crear->execute(['nombre' => $nombre]);
+    $idFuncionario = (int)$conexion->lastInsertId();
+    $vincular = $conexion->prepare(
+        'INSERT INTO FUNCIONARIO_CUENTA (IdFuncionarioFK, IdUsuarioFK) VALUES (:funcionario, :usuario)'
+    );
+    $vincular->execute(['funcionario' => $idFuncionario, 'usuario' => $_SESSION['usuario_id']]);
+    return $idFuncionario;
 }
 
 function textoEntrada(array $datos, string $campo): ?string
@@ -136,76 +112,14 @@ function obtenerCatalogos(PDO $conexion): array
     ];
 }
 
-if ($accion === 'estado-inicial') {
-    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-        responder(['success' => false, 'message' => 'Usa GET.'], 405);
-    }
-    $cuentaAdministrativa = (int)$conexion->query(
-        'SELECT COUNT(*) FROM ADMINISTRATIVO'
-    )->fetchColumn();
-    $funcionario = funcionarioActual($conexion);
-    responder([
-        'success' => true,
-        'hayAdministrativo' => $cuentaAdministrativa > 0,
-        'vinculado' => $funcionario !== null,
-        'puedeInicializar' => $cuentaAdministrativa === 0,
-        'nombreUsuario' => $_SESSION['nombre'] ?? '',
-    ]);
-}
-
-if ($accion === 'inicializar-administrativo') {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        responder(['success' => false, 'message' => 'Usa POST.'], 405);
-    }
-    $bloqueoInicial = (int)$conexion->query("SELECT GET_LOCK('sigsm_ambulancias_admin_inicial', 10)")->fetchColumn();
-    if ($bloqueoInicial !== 1) {
-        responder(['success' => false, 'message' => 'No se pudo reservar la configuración inicial; inténtelo nuevamente.'], 503);
-    }
-    try {
-        $cantidadAdmin = (int)$conexion->query('SELECT COUNT(*) FROM ADMINISTRATIVO')->fetchColumn();
-        if ($cantidadAdmin > 0) {
-            responder(['success' => false, 'message' => 'La administración inicial ya fue configurada.'], 409);
-        }
-        $yaVinculado = funcionarioActual($conexion);
-        if ($yaVinculado) {
-            responder(['success' => false, 'message' => 'La cuenta ya tiene un perfil asignado.'], 409);
-        }
-
-        $conexion->beginTransaction();
-        $nombre = trim((string)($_SESSION['nombre'] ?? 'Administrador inicial'));
-        $crearFuncionario = $conexion->prepare('INSERT INTO FUNCIONARIO (Nombre) VALUES (:nombre)');
-        $crearFuncionario->execute(['nombre' => $nombre]);
-        $idFuncionario = (int)$conexion->lastInsertId();
-        $vincular = $conexion->prepare(
-            'INSERT INTO FUNCIONARIO_CUENTA (IdFuncionarioFK, IdUsuarioFK) VALUES (:funcionario, :usuario)'
-        );
-        $vincular->execute(['funcionario' => $idFuncionario, 'usuario' => $_SESSION['usuario_id']]);
-        $crearAdmin = $conexion->prepare('INSERT INTO ADMINISTRATIVO (IdFuncionarioFK) VALUES (:funcionario)');
-        $crearAdmin->execute(['funcionario' => $idFuncionario]);
-        $conexion->commit();
-        responder(['success' => true, 'mensaje' => 'Cuenta configurada como administrador del módulo.']);
-    } catch (Throwable $error) {
-        if ($conexion->inTransaction()) {
-            $conexion->rollBack();
-        }
-        responder(['success' => false, 'message' => 'No se pudo configurar la administración inicial.'], 500);
-    } finally {
-        $conexion->query("SELECT RELEASE_LOCK('sigsm_ambulancias_admin_inicial')");
-    }
-}
-
-$funcionario = exigirFuncionario($conexion);
-
 if ($accion === 'catalogos') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         responder(['success' => false, 'message' => 'Usa GET.'], 405);
     }
-    responder(['success' => true, 'EsAdministrativo' => (bool)$funcionario['EsAdministrativo']] + obtenerCatalogos($conexion));
+    responder(['success' => true] + obtenerCatalogos($conexion));
 }
 
 if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
-    $funcionario = exigirFuncionario($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         responder(['success' => false, 'message' => 'Usa GET.'], 405);
     }
@@ -217,7 +131,7 @@ if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
                 r.PuntoOrigen, r.PuntoDestino, r.RutinaBase,
                 elemento.TipoElemento, elemento.NroReferencia, elemento.DatosPaciente,
                 chofer.Nombre AS NombreChofer, enfermero.Nombre AS NombreEnfermero,
-                administrativo.Nombre AS NombreAdministrativo, medico.Nombre AS NombreMedico
+                administrativo.Nombre AS NombreResponsable, medico.Nombre AS NombreMedico
          FROM TRASLADO t
          JOIN VEHICULO v ON v.Matricula = t.MatriculaFK
          JOIN RUTA r ON r.IdRuta = t.IdRutaFK
@@ -230,14 +144,13 @@ if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
                   COALESCE(t.HoraSalida, t.HoraLlegadaEst) DESC,
                   t.IdTraslado DESC"
     );
-    $traslados = filtrarTrasladosPorPerfil($consulta->fetchAll(), $funcionario);
+    $traslados = $consulta->fetchAll();
     $estadosActivos = ['solicitado', 'pendiente', 'en_camino', 'en_destino', 'en_retorno'];
     $activos = array_values(array_filter($traslados, static fn(array $item): bool => in_array($item['Estado'], $estadosActivos, true)));
 
     if ($accion === 'activos') {
         responder([
             'success' => true,
-            'EsAdministrativo' => (bool)$funcionario['EsAdministrativo'],
             'Data' => $activos,
         ]);
     }
@@ -250,13 +163,6 @@ if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
     }
 
     $vehiculos = $conexion->query('SELECT Matricula, TipoVehiculo, RequiereEspecializado FROM VEHICULO ORDER BY Matricula')->fetchAll();
-    if ((int)$funcionario['EsAdministrativo'] !== 1) {
-        $matriculasAsignadas = array_unique(array_column($activos, 'MatriculaFK'));
-        $vehiculos = array_values(array_filter(
-            $vehiculos,
-            static fn(array $vehiculo): bool => in_array($vehiculo['Matricula'], $matriculasAsignadas, true),
-        ));
-    }
     $ocupados = [];
     foreach ($activos as $traslado) {
         $ocupados[$traslado['MatriculaFK']] = $traslado;
@@ -272,7 +178,6 @@ if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
     }
     responder([
         'success' => true,
-        'EsAdministrativo' => (bool)$funcionario['EsAdministrativo'],
         'Estadisticas' => [
             'VehiculosDisponibles' => count($vehiculos) - count($ocupados),
             'TrasladosActivos' => count($activos),
@@ -284,49 +189,41 @@ if ($accion === 'resumen' || $accion === 'activos' || $accion === 'historial') {
 }
 
 if ($accion === 'administracion') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         responder(['success' => false, 'message' => 'Usa GET.'], 405);
     }
     $personal = $conexion->query(
-        'SELECT f.IdFuncionario, f.Nombre, u.id AS IdUsuario, u.documento AS Documento,
-                u.activo AS Activo,
+        'SELECT f.IdFuncionario, f.Nombre,
                 EXISTS(SELECT 1 FROM CHOFER c WHERE c.IdFuncionarioFK = f.IdFuncionario) AS EsChofer,
                 EXISTS(SELECT 1 FROM ENFERMERO e WHERE e.IdFuncionarioFK = f.IdFuncionario) AS EsEnfermero,
-                EXISTS(SELECT 1 FROM ADMINISTRATIVO a WHERE a.IdFuncionarioFK = f.IdFuncionario) AS EsAdministrativo,
                 EXISTS(SELECT 1 FROM MEDICO m WHERE m.IdFuncionarioFK = f.IdFuncionario) AS EsMedico
          FROM FUNCIONARIO f
-         JOIN FUNCIONARIO_CUENTA fc ON fc.IdFuncionarioFK = f.IdFuncionario
-         JOIN usuarios u ON u.id = fc.IdUsuarioFK
          ORDER BY f.Nombre'
     )->fetchAll();
     responder(['success' => true, 'Personal' => $personal] + obtenerCatalogos($conexion));
 }
 
 if ($accion === 'crear-personal') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         responder(['success' => false, 'message' => 'Usa POST.'], 405);
     }
     $datos = cuerpoPeticion();
-    $documento = textoEntrada($datos, 'Documento');
     $nombre = textoEntrada($datos, 'Nombre');
-    $clave = $datos['Clave'] ?? null;
     $perfiles = $datos['Perfiles'] ?? null;
     $telefonos = $datos['Telefonos'] ?? [];
-    if ($documento === null || !preg_match('/^[0-9]{1,20}$/', $documento)
-        || $nombre === null || $nombre === '' || mb_strlen($nombre, 'UTF-8') > 150
-        || !is_string($clave) || mb_strlen($clave, 'UTF-8') < 10 || strlen($clave) > 72
+    if ($nombre === null || $nombre === '' || mb_strlen($nombre, 'UTF-8') > 150
         || !is_array($perfiles) || !$perfiles
         || !is_array($telefonos)
     ) {
-        responder(['success' => false, 'message' => 'Revise documento numérico, nombre (máximo 150), clave (10 a 72 caracteres), perfiles y lista de teléfonos.'], 400);
+        responder(['success' => false, 'message' => 'Revise el nombre, los perfiles y los teléfonos.'], 400);
     }
-    $perfilesPermitidos = ['chofer', 'enfermero', 'administrativo', 'medico'];
-    $perfiles = array_values(array_unique($perfiles));
-    if (array_diff($perfiles, $perfilesPermitidos)) {
-        responder(['success' => false, 'message' => 'Se recibió un perfil no permitido.'], 400);
+    $perfilesPermitidos = ['chofer', 'enfermero', 'medico'];
+    foreach ($perfiles as $perfil) {
+        if (!in_array($perfil, $perfilesPermitidos, true)) {
+            responder(['success' => false, 'message' => 'Se recibió un perfil no permitido.'], 400);
+        }
     }
+    $perfiles = array_unique($perfiles);
     foreach ($telefonos as $telefono) {
         if (!is_string($telefono) || strlen(trim($telefono)) < 6 || strlen(trim($telefono)) > 25) {
             responder(['success' => false, 'message' => 'Cada teléfono debe tener de 6 a 25 caracteres.'], 400);
@@ -335,34 +232,17 @@ if ($accion === 'crear-personal') {
 
     try {
         $conexion->beginTransaction();
-        $crearUsuario = $conexion->prepare(
-            'INSERT INTO usuarios (documento, nombre, clave, rol, activo)
-             VALUES (:documento, :nombre, :clave, :rol, 1)'
-        );
-        $crearUsuario->execute([
-            'documento' => $documento,
-            'nombre' => $nombre,
-            'clave' => password_hash($clave, PASSWORD_DEFAULT),
-            'rol' => 'funcionario',
-        ]);
-        $idUsuario = (int)$conexion->lastInsertId();
         $crearFuncionario = $conexion->prepare('INSERT INTO FUNCIONARIO (Nombre) VALUES (:nombre)');
         $crearFuncionario->execute(['nombre' => $nombre]);
         $idFuncionario = (int)$conexion->lastInsertId();
-        $vincular = $conexion->prepare(
-            'INSERT INTO FUNCIONARIO_CUENTA (IdFuncionarioFK, IdUsuarioFK) VALUES (:funcionario, :usuario)'
-        );
-        $vincular->execute(['funcionario' => $idFuncionario, 'usuario' => $idUsuario]);
-
         $perfilSql = [
             'chofer' => ['INSERT INTO CHOFER (IdFuncionarioFK, TipoLicencia) VALUES (:id, :valor)', textoEntrada($datos, 'TipoLicencia')],
             'enfermero' => ['INSERT INTO ENFERMERO (IdFuncionarioFK, Especialidad) VALUES (:id, :valor)', textoEntrada($datos, 'Especialidad')],
-            'administrativo' => ['INSERT INTO ADMINISTRATIVO (IdFuncionarioFK) VALUES (:id)', null],
             'medico' => ['INSERT INTO MEDICO (IdFuncionarioFK) VALUES (:id)', null],
         ];
         foreach ($perfiles as $perfil) {
             [$sql, $valor] = $perfilSql[$perfil];
-            if (in_array($perfil, ['chofer', 'enfermero'], true) && ($valor === null || $valor === '' || mb_strlen($valor, 'UTF-8') > 120)) {
+            if (in_array($perfil, ['chofer', 'enfermero'], true) && ($valor === null || $valor === '' || mb_strlen($valor, 'UTF-8') > ($perfil === 'chofer' ? 30 : 120))) {
                 throw new DomainException('Complete los datos requeridos del perfil seleccionado.');
             }
             $insertarPerfil = $conexion->prepare($sql);
@@ -382,7 +262,7 @@ if ($accion === 'crear-personal') {
             }
         }
         $conexion->commit();
-        responder(['success' => true, 'IdFuncionario' => $idFuncionario, 'IdUsuario' => $idUsuario], 201);
+        responder(['success' => true, 'IdFuncionario' => $idFuncionario], 201);
     } catch (DomainException $error) {
         if ($conexion->inTransaction()) {
             $conexion->rollBack();
@@ -393,60 +273,12 @@ if ($accion === 'crear-personal') {
             $conexion->rollBack();
         }
         responder(['success' => false, 'message' => $error->getCode() === '23000'
-            ? 'El documento ya existe o hay un dato relacionado duplicado.'
-            : 'No se pudo crear el usuario y sus perfiles.'], $error->getCode() === '23000' ? 409 : 500);
+            ? 'Hay un dato relacionado duplicado.'
+            : 'No se pudo registrar el personal.'], $error->getCode() === '23000' ? 409 : 500);
     }
-}
-
-if ($accion === 'desactivar-personal') {
-    exigirAdministrativo($conexion);
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        responder(['success' => false, 'message' => 'Usa POST.'], 405);
-    }
-    $datos = cuerpoPeticion();
-    $idUsuario = enteroEntrada($datos, 'IdUsuario');
-    if ($idUsuario === null || $idUsuario === (int)$_SESSION['usuario_id']) {
-        responder(['success' => false, 'message' => 'No puede desactivar esta cuenta.'], 400);
-    }
-    $esAdmin = $conexion->prepare(
-        'SELECT EXISTS(
-            SELECT 1 FROM FUNCIONARIO_CUENTA fc
-            JOIN ADMINISTRATIVO a ON a.IdFuncionarioFK = fc.IdFuncionarioFK
-            WHERE fc.IdUsuarioFK = :usuario
-        )'
-    );
-    $esAdmin->execute(['usuario' => $idUsuario]);
-    if ((int)$esAdmin->fetchColumn() === 1) {
-        $adminsActivos = (int)$conexion->query(
-            'SELECT COUNT(*) FROM ADMINISTRATIVO a
-             JOIN FUNCIONARIO_CUENTA fc ON fc.IdFuncionarioFK = a.IdFuncionarioFK
-             JOIN usuarios u ON u.id = fc.IdUsuarioFK
-             WHERE u.activo = 1'
-        )->fetchColumn();
-        if ($adminsActivos <= 1) {
-            responder(['success' => false, 'message' => 'Debe quedar al menos una cuenta administrativa activa.'], 409);
-        }
-    }
-    $consulta = $conexion->prepare(
-        'UPDATE usuarios SET activo = 0 WHERE id = :id AND EXISTS (
-            SELECT 1 FROM FUNCIONARIO_CUENTA fc
-            JOIN ADMINISTRATIVO a ON a.IdFuncionarioFK = fc.IdFuncionarioFK
-            WHERE fc.IdUsuarioFK = :id_admin
-        ) AND EXISTS (
-            SELECT 1 FROM FUNCIONARIO_CUENTA objetivo
-            WHERE objetivo.IdUsuarioFK = :id_vinculado
-        )'
-    );
-    $consulta->execute([
-        'id' => $idUsuario,
-        'id_admin' => $_SESSION['usuario_id'],
-        'id_vinculado' => $idUsuario,
-    ]);
-    responder(['success' => $consulta->rowCount() > 0]);
 }
 
 if ($accion === 'guardar-vehiculo') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         responder(['success' => false, 'message' => 'Usa POST.'], 405);
     }
@@ -474,7 +306,6 @@ if ($accion === 'guardar-vehiculo') {
 }
 
 if ($accion === 'crear-ruta') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         responder(['success' => false, 'message' => 'Usa POST.'], 405);
     }
@@ -496,7 +327,6 @@ if ($accion === 'crear-ruta') {
 }
 
 if ($accion === 'crear-traslado') {
-    exigirAdministrativo($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         responder(['success' => false, 'message' => 'Usa POST.'], 405);
     }
@@ -527,6 +357,7 @@ if ($accion === 'crear-traslado') {
 
     try {
         $conexion->beginTransaction();
+        $idResponsable = responsableTraslado($conexion);
         $bloquearVehiculo = $conexion->prepare('SELECT Matricula, RequiereEspecializado FROM VEHICULO WHERE Matricula = :matricula FOR UPDATE');
         $bloquearVehiculo->execute(['matricula' => $matricula]);
         $vehiculo = $bloquearVehiculo->fetch();
@@ -571,7 +402,7 @@ if ($accion === 'crear-traslado') {
             'llegada' => $llegadaEstimada,
             'chofer' => $idChofer,
             'enfermero' => $idEnfermero,
-            'administrativo' => $funcionario['IdFuncionario'],
+            'administrativo' => $idResponsable,
             'medico' => $idMedico,
             'matricula' => $matricula,
             'ruta' => $idRuta,
@@ -591,7 +422,6 @@ if ($accion === 'crear-traslado') {
 }
 
 if ($accion === 'actualizar-estado') {
-    $funcionario = exigirFuncionario($conexion);
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         responder(['success' => false, 'message' => 'Usa POST.'], 405);
     }
@@ -611,7 +441,7 @@ if ($accion === 'actualizar-estado') {
     try {
         $conexion->beginTransaction();
         $buscar = $conexion->prepare(
-            'SELECT Estado, IdChoferFK, IdEnfermeroFK, IdMedicoFK
+            'SELECT Estado
              FROM TRASLADO WHERE IdTraslado = :id FOR UPDATE'
         );
         $buscar->execute(['id' => $id]);
@@ -620,22 +450,10 @@ if ($accion === 'actualizar-estado') {
             $conexion->rollBack();
             responder(['success' => false, 'message' => 'Traslado no encontrado.'], 404);
         }
-        $esChoferAsignado = (int)$funcionario['EsChofer'] === 1
-            && (int)$trasladoBloqueado['IdChoferFK'] === (int)$funcionario['IdFuncionario'];
-        if ((int)$funcionario['EsAdministrativo'] !== 1 && !$esChoferAsignado) {
-            $conexion->rollBack();
-            responder(['success' => false, 'message' => 'Solo el administrativo o el conductor asignado puede actualizar el estado.'], 403);
-        }
         $estadoActual = $trasladoBloqueado['Estado'];
         if (!in_array($nuevoEstado, $transiciones[$estadoActual] ?? [], true)) {
             $conexion->rollBack();
             responder(['success' => false, 'message' => 'La transición de estado no está permitida.'], 409);
-        }
-        if ((int)$funcionario['EsAdministrativo'] !== 1
-            && (in_array($nuevoEstado, ['cancelado', 'pendiente'], true) || $estadoActual === 'solicitado')
-        ) {
-            $conexion->rollBack();
-            responder(['success' => false, 'message' => 'Aceptar o cancelar solicitudes requiere perfil administrativo.'], 403);
         }
         $actualizar = $conexion->prepare(
             "UPDATE TRASLADO SET Estado = :estado,

@@ -40,6 +40,7 @@ h2 {
   padding: 15px 20px;
   text-align: left;
   cursor: pointer;
+  text-decoration: none;
   box-shadow: 0 2px 6px #00000011;
 }
 
@@ -97,4 +98,69 @@ h2 {
   .grid-documentos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+.contenedor [hidden] {
+  display: none;
+}
+
+.ficha-documento {
+  display: grid;
+  justify-items: start;
+  gap: 15px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #d9e1ea;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.ficha-documento h3,
+#volverCatalogo {
+  color: #003d82;
+}
+
+.ficha-documento p {
+  line-height: 1.5;
+}
+
+.tarjeta-documento,
+.ficha-documento,
+#volverCatalogo {
+  line-height: 1.5;
+}
+
+.tarjeta-documento-titulo,
+.ficha-documento p {
+  font-size: 18px;
+}
+
+.tarjeta-documento-subtitulo,
+.estado {
+  font-size: 16px;
+}
+
+.ficha-documento h3 {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+}
+
+#volverCatalogo {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 48px;
+  font-size: 18px;
+}
+
+.contenedor a:focus-visible {
+  outline: 3px solid #003d82;
+  outline-offset: 4px;
+}
+
+.encuesta-banner-texto strong {
+  font-size: 18px;
+}
+
+.encuesta-banner-texto span {
+  font-size: 16px;
 }

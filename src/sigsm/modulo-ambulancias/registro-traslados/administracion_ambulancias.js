@@ -28,7 +28,7 @@
 
   function renderizarPersonal(personal) {
     if (!personal.length) {
-      tablaPersonal.innerHTML = '<tr><td colspan="5">Todavía no hay cuentas vinculadas al módulo.</td></tr>';
+      tablaPersonal.innerHTML = '<tr><td colspan="2">Todavía no hay personal registrado.</td></tr>';
       return;
     }
     tablaPersonal.innerHTML = personal.map((persona) => {
@@ -36,15 +36,10 @@
         persona.EsChofer && 'Chofer',
         persona.EsEnfermero && 'Enfermero',
         persona.EsMedico && 'Médico',
-        persona.EsAdministrativo && 'Administrativo',
       ].filter(Boolean).join(', ');
-      const estado = Number(persona.Activo) === 1 ? 'Activo' : 'Desactivado';
       return `<tr>
         <td>${escapar(persona.Nombre)}</td>
-        <td>${escapar(persona.Documento)}</td>
         <td>${escapar(perfiles)}</td>
-        <td>${estado}</td>
-        <td>${Number(persona.Activo) === 1 ? `<button type="button" data-desactivar="${Number(persona.IdUsuario)}">Desactivar</button>` : ''}</td>
       </tr>`;
     }).join('');
   }
@@ -87,9 +82,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          Documento: formData.get('Documento').trim(),
           Nombre: formData.get('Nombre').trim(),
-          Clave: formData.get('Clave'),
           Perfiles: perfiles,
           TipoLicencia: formData.get('TipoLicencia').trim(),
           Especialidad: formData.get('Especialidad').trim(),
@@ -97,8 +90,8 @@
         }),
       });
       formularioPersonal.reset();
-      mensaje.textContent = 'Cuenta y perfiles creados.';
       await cargarAdministracion();
+      mensaje.textContent = 'Personal registrado. Ya puedes seleccionarlo al crear un traslado.';
     } catch (error) {
       mensaje.textContent = error.message;
     } finally {
@@ -123,8 +116,9 @@
         }),
       });
       formularioVehiculo.reset();
-      mensaje.textContent = 'Vehículo guardado.';
       await cargarAdministracion();
+      mensaje.textContent = 'Vehículo guardado.';
+
     } catch (error) {
       mensaje.textContent = error.message;
     } finally {
@@ -149,8 +143,9 @@
         }),
       });
       formularioRuta.reset();
-      mensaje.textContent = 'Ruta guardada.';
       await cargarAdministracion();
+      mensaje.textContent = 'Ruta guardada.';
+
     } catch (error) {
       mensaje.textContent = error.message;
     } finally {
@@ -158,23 +153,6 @@
     }
   });
 
-  tablaPersonal.addEventListener('click', async (evento) => {
-    const boton = evento.target.closest('button[data-desactivar]');
-    if (!boton || !window.confirm('¿Desactivar el acceso de esta cuenta?')) return;
-    boton.disabled = true;
-    try {
-      await request('desactivar-personal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ IdUsuario: Number(boton.dataset.desactivar) }),
-      });
-      mensaje.textContent = 'Cuenta desactivada.';
-      await cargarAdministracion();
-    } catch (error) {
-      mensaje.textContent = error.message;
-      boton.disabled = false;
-    }
-  });
 
   cargarAdministracion();
 })();

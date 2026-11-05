@@ -20,10 +20,12 @@
   </header>
 
   <main class="contenedor">
-    <h2 class="centrado">Documentos disponibles</h2>
-    <p class="subtitulo centrado">Seleccione un documento para verlo en pantalla</p>
+    <h2 id="tituloPagina" class="centrado">Documentos disponibles</h2>
+    <p id="subtituloCatalogo" class="subtitulo centrado">Seleccione un documento para verlo en pantalla</p>
     <div id="gridDocumentos" class="grid-documentos"></div>
-    <p id="estadoDocumentos" class="estado">cargando documentos</p>
+    <a id="volverCatalogo" href="documento.html" hidden>Volver a todos los documentos</a>
+    <article id="fichaDocumento" class="ficha-documento" hidden></article>
+    <p id="estadoDocumentos" class="estado" role="status">cargando documentos</p>
     <a href="../Pacientes/Encuesta.html" id="enlaceEncuesta" class="btn-enviar encuesta-banner">
       <div class="encuesta-banner-texto">
         <strong>¿Fue útil tu documento?</strong> 

@@ -159,3 +159,25 @@
 .mensaje-error.visible {
     display: block;
 }
+
+.estado-documento {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.estado-pendiente {
+    background-color: #f5d247;
+    color: #b45309;
+}
+
+.estado-aprobado {
+    background-color: #5ef331;
+    color: #166534;
+}
+
+.estado-rechazado {
+    background-color: #ff2424;
+    color: #720202;
+}

@@ -11,6 +11,9 @@
   const botonCancelarDocumento = document.querySelector('#botonCancelarDocumento');
   const mensajeFormularioDocumento = document.querySelector('#mensajeFormularioDocumento');
 
+  let documentoEnEdicion = null;
+  let documentosPorId = new Map();
+
   // Carga la lista de documentos desde la API
   async function cargarDocumentos() {
     // Muestra el estado de carga mientras consulta la API
@@ -19,17 +22,20 @@
 
     try {
       // Llamada a la API para obtener todos los documentos activos
-      const respuesta = await fetch(`${API_BASE}/documentos.php?action=getall`, {
+      const respuesta = await fetch(`${API_BASE}/documentos.php?action=gestion`, {
         credentials: 'include',
       });
       const resultado = await respuesta.json();
 
-      // Si la respuesta no salió bine, entonces lanza un error para mostrarlo
+      // Si la respuesta no salió bien, entonces esto lanza un error para mostrarlo
       if (!respuesta.ok || !resultado.success) {
         throw new Error(resultado.message || 'No se pudieron cargar los documentos.');
       }
 
       // Renderiza la lista y llena el selector de categorías
+      documentosPorId = new Map(resultado.data.flatMap((categoria) =>
+        categoria.documentos.map((documento) => [Number(documento.id), { ...documento, categoriaId: categoria.id }])
+      ));
       renderizarCategorias(resultado.data);
       llenarSelectCategorias(resultado.data);
       estadoDocumentos.textContent = '';
@@ -53,8 +59,10 @@
           ${categoria.documentos.map((documento) => `
             <li>
               <span>${escapeHtml(documento.titulo)}</span>
+              <span class="estado-documento estado-${escapeHtml(documento.estado_revision)}">${escapeHtml(documento.estado_revision)} ${escapeHtml(documento.motivo_rechazo || "")}</span>
               <span class="fecha">${formatearFecha(documento.fecha_actualizacion)}</span>
               <a href="PrevistaDocumentos/AdmDocumento.html?id=${documento.id}" class="btn-ver">Ver</a>
+              <button type="button" class="btn-reenviar" data-documento-id="${documento.id}" ${documento.puede_reenviar ? "" : "hidden"}>Corregir y reenviar</button>
               <button type="button" class="btn-eliminar" data-documento-id="${documento.id}">Eliminar</button>
             </li>
           `).join('')}
@@ -115,12 +123,21 @@
   }
 
   // Abre el modal para crear un documento nuevo
-  botonNuevoDocumento.addEventListener('click', () => {
+  function abrirFormulario(documento = null) {
+    documentoEnEdicion = documento;
     mensajeFormularioDocumento.classList.remove('visible');
     mensajeFormularioDocumento.textContent = '';
     formularioNuevoDocumento.reset();
+    if (documento) {
+      campoCategoria.value = documento.categoriaId;
+      for (const campo of ['titulo', 'especialista', 'descripcion', 'archivo_url']) {
+        formularioNuevoDocumento.elements.namedItem(campo).value = documento[campo === 'archivo_url' ? 'archivo_origen' : campo];
+      }
+    }
     modalNuevoDocumento.classList.remove('oculto');
-  });
+  }
+
+  botonNuevoDocumento.addEventListener('click', () => abrirFormulario());
 
   // Cierra el modal de creación
   botonCancelarDocumento.addEventListener('click', () => {
@@ -129,6 +146,11 @@
 
   // Escucha clicks dentro de la lista para detectar si se presionó "Eliminar"
   contenedorCategorias.addEventListener('click', (evento) => {
+    const reenviar = evento.target.closest('.btn-reenviar');
+    if (reenviar) {
+      abrirFormulario(documentosPorId.get(Number(reenviar.dataset.documentoId)));
+      return;
+    }
     const boton = evento.target.closest('.btn-eliminar');
     if (!boton) return;
 
@@ -165,11 +187,13 @@
     }
 
     try {
-      const respuesta = await fetch(`${API_BASE}/documentos.php?action=create`, {
+      const respuesta = await fetch(`${API_BASE}/documentos.php?action=${documentoEnEdicion ? "reenviar" : "create"}`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: documentoEnEdicion?.id,
+          peso_kb: documentoEnEdicion?.peso_kb ?? 0,
           categoria_id: datos.get('categoria_id'),
           titulo,
           especialista,

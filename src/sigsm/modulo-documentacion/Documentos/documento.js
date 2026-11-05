@@ -1,52 +1,63 @@
-(function () {
-  // Base de la API del sistema
-  const API_BASE = '/sigsm/api';
+(() => {
+  const api = '/sigsm/api/documentos.php';
+  const grid = document.querySelector('#gridDocumentos');
+  const estado = document.querySelector('#estadoDocumentos');
+  const id = new URLSearchParams(location.search).get('id');
 
-  // Elementos del HTML donde se renderiza la lista de documentos
-  const gridDocumentos = document.getElementById('gridDocumentos');
-  const estadoDocumentos = document.getElementById('estadoDocumentos');
+  const ficha = document.querySelector('#fichaDocumento');
+  const encuesta = document.querySelector('#enlaceEncuesta');
 
-  // Trae todos los documentos desde la API
-  async function cargarDocumentos() {
-    try {
-      const respuesta = await fetch(`${API_BASE}/documentos.php?action=getall`);
-      const resultado = await respuesta.json();
-
-      // Si la API respondió con error, tira una excepción para mostrar el mensaje
-      if (!respuesta.ok || !resultado.success || !Array.isArray(resultado.data)) {
-        throw new Error(resultado.message || 'No se pudieron cargar los documentos.');
-      }
-
-      // Aplana la estructura de categorías para tener una lista simple de documentos
-      const documentos = resultado.data.flatMap((categoria) => {
-        const items = Array.isArray(categoria.documentos) ? categoria.documentos : [];
-        return items.map((documento) => ({
-          ...documento,
-          categoria_nombre: documento.categoria_nombre || categoria.nombre,
-        }));
-      });
-
-      // Si no hay documentos dice que no hay documentos
-      if (!documentos.length) {
-        gridDocumentos.innerHTML = '<p class="estado">No hay documentos disponibles.</p>';
-        estadoDocumentos.textContent = '';
-        return;
-      }
-
-      // Genera el HTML de cada tarjeta de documento.
-      gridDocumentos.innerHTML = documentos.map((documento) => `
-        <button class="tarjeta-documento" data-id="${documento.id}" type="button">
-          <span class="tarjeta-documento-titulo">${documento.titulo}</span>
-          <span class="tarjeta-documento-subtitulo">${documento.categoria_nombre}</span>
-        </button>
-      `).join('');
-
-      estadoDocumentos.textContent = '';
-    } catch (error) {
-      estadoDocumentos.textContent = error.message;
-    }
+  if (id !== null) {
+    document.querySelector('#tituloPagina').textContent = 'Detalle del documento';
+    document.querySelector('#subtituloCatalogo').hidden = true;
+    document.querySelector('#volverCatalogo').hidden = false;
+    grid.hidden = true;
+    encuesta.hidden = true;
   }
 
-  // Se ejecuta al cargar la página.
-  cargarDocumentos();
+  async function cargar() {
+    const consulta = id === null ? 'action=getall' : 'action=get&id=' + encodeURIComponent(id);
+    const respuesta = await fetch(api + '?' + consulta);
+    const resultado = await respuesta.json();
+    if (!respuesta.ok || !resultado.success) throw new Error(resultado.message);
+    if (id === null) {
+      const documentos = resultado.data.flatMap((categoria) => categoria.documentos);
+      grid.replaceChildren(...documentos.map((documento) => {
+        const enlace = document.createElement('a');
+        enlace.className = 'tarjeta-documento';
+        enlace.href = '?id=' + encodeURIComponent(documento.id);
+        const titulo = document.createElement('span');
+        titulo.className = 'tarjeta-documento-titulo';
+        titulo.textContent = documento.titulo;
+        const categoria = document.createElement('span');
+        categoria.className = 'tarjeta-documento-subtitulo';
+        categoria.textContent = documento.categoria_nombre;
+        enlace.append(titulo, categoria);
+        return enlace;
+      }));
+      estado.textContent = documentos.length ? '' : 'No hay documentos disponibles.';
+      return;
+    }
+
+    const documento = resultado.data;
+    const titulo = document.createElement('h3');
+    titulo.textContent = documento.titulo;
+    const descripcion = document.createElement('p');
+    descripcion.textContent = documento.descripcion;
+    ficha.replaceChildren(titulo, descripcion);
+    ficha.hidden = false;
+    if (documento.archivo_url) {
+      const enlace = document.createElement('a');
+      enlace.href = documento.archivo_url;
+      enlace.textContent = 'Abrir PDF';
+      enlace.className = 'btn-enviar';
+      ficha.append(enlace);
+    }
+    encuesta.href = '../Pacientes/Encuesta.html?servicio=' + encodeURIComponent(documento.categoria_nombre)
+      + '&documento_id=' + encodeURIComponent(documento.id);
+    encuesta.hidden = false;
+    estado.textContent = '';
+  }
+
+  cargar().catch((error) => { estado.textContent = error.message; });
 })();

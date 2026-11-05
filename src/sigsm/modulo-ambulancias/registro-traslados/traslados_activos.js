@@ -6,9 +6,7 @@
   const totalEl = document.querySelector('#totalActivos');
   const prioridadAltaEl = document.querySelector('#totalAlta');
   const actualizacionEl = document.querySelector('#ultimaActualizacion');
-  const enlaceNuevoTraslado = document.querySelector('#enlaceNuevoTraslado');
 
-  let esAdministrativo = false;
 
   const acciones = {
     solicitado: [
@@ -92,15 +90,7 @@
     lista.innerHTML = traslados.map((traslado) => {
       const accionesEstado = acciones[traslado.Estado] || [];
 
-      const accionesPermitidas = esAdministrativo
-        ? accionesEstado
-        : accionesEstado.filter(
-            (accion) =>
-              accion.Estado !== 'pendiente' &&
-              accion.Estado !== 'cancelado'
-          );
-
-      const botones = accionesPermitidas.map((accion) => `
+      const botones = accionesEstado.map((accion) => `
         <button
           type="button"
           class="btn-accion"
@@ -147,8 +137,8 @@
           <p>
             <strong>Médico:</strong>
             ${escapar(traslado.NombreMedico || 'No asignado')} ·
-            <strong>Administrativo:</strong>
-            ${escapar(traslado.NombreAdministrativo)}
+            <strong>Registrado por:</strong>
+            ${escapar(traslado.NombreResponsable)}
           </p>
 
           <p>
@@ -270,12 +260,6 @@
       }
 
       const traslados = resultado.Data;
-
-      esAdministrativo =
-        resultado.EsAdministrativo === true ||
-        Number(resultado.EsAdministrativo) === 1;
-
-      enlaceNuevoTraslado.hidden = !esAdministrativo;
 
       totalEl.textContent = traslados.length;
 
