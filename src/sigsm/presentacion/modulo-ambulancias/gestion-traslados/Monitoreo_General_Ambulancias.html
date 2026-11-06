@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Panel de Ambulancias</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="Monitoreo_General_Ambulancias.css">
+    <script src="../../autenticacion/sesion.js" defer></script>
+    <script src="Monitoreo_General_Ambulancias.js" defer></script>
+</head>
+<body data-roles="funcionario" data-login-url="../../autenticacion/index.html">
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+        <div class="info-usuario">
+            <span id="nombreUsuario">Usuario</span>
+            <a href="../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+    <!-- Menú principal -->
+    <nav class="menu-principal">
+        <ul>
+            <li><a href="../../autenticacion/inicio_funcionario.html">Inicio</a></li>
+            <li><a href="../../modulo-documentacion/Funcionarios/documentos/Gestión_de_Documentación.html">Documentos</a></li>
+            <li><a href="../../modulo-documentacion/Funcionarios/encuestas/respuestas_encuestas.html">Resp. Encuestas</a></li>
+            <li><a href="Monitoreo_General_Ambulancias.html" class="activo">Ambulancias</a></li>
+        </ul>
+    </nav>
+    <!-- Contenido -->
+    <main class="contenedor-principal">
+        <div class="ambulancias-header">
+            <h2>Monitoreo General de la Flota</h2>
+            <a href="../registro-traslados/Formulario_traslado.html" class="btn-nuevo-traslado">+ Nuevo Traslado</a>
+            <a href="../registro-traslados/Administracion_ambulancias.html" class="btn-nuevo-traslado">Administrar módulo</a>
+        </div>
+        <section class="estadisticas">
+            <div class="tarjeta">
+                <h3 id="movilesDisponibles">-</h3>
+                <p>Móviles disponibles</p>
+            </div>
+            <div class="tarjeta">
+                <h3 id="trasladosActivos">-</h3>
+                <p>En traslado activo</p>
+            </div>
+        </section>
+        <section class="tabla-respuestas">
+            <h3>Estado de Unidades</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Móvil ID</th>
+                        <th>Chofer Asignado</th>
+                        <th>Destino / Servicio</th>
+                        <th>Estado actual</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaFlota"></tbody>
+            </table>
+        </section>
+        <section class="acceso-rapido">
+            <a href="../registro-traslados/Panel_traslados_activos.html" class="tarjeta-rapida">
+                <h4>Traslados Activos</h4>
+                <p>Ver panel de traslados en curso</p>
+            </a>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="informacion-footer">
+                <h4>S.I.G.S.M.</h4>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+                <p>Hospital de Clínicas - Montevideo, Uruguay</p>
+            </div>
+            <div class="datos-proyecto-footer">
+                <h4>Proyecto de Egreso 2026</h4>
+                <p>BT - Tecnologías de la Información</p>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <p>© 2026 - S.I.G.S.M. - Hospital de Clínicas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+
+

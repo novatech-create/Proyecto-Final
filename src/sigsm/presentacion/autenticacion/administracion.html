@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración de funcionarios | SIGSM</title>
+  <link rel="stylesheet" href="compartido.css">
+  <link rel="stylesheet" href="panel_roles.css">
+  <script src="sesion.js" defer></script>
+  <script src="panel_roles.js" defer></script>
+</head>
+<body data-roles="administrador" data-login-url="index.html">
+  <header class="barra-superior">
+    <div class="logo-header">
+      <img src="../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+      <div class="titulo-header">
+        <h1>S.I.G.S.M.</h1>
+        <p>Sistema Informático de Gestión de Servicios Médicos</p>
+      </div>
+    </div>
+    <div class="info-usuario">
+      <span id="nombreUsuario">Usuario</span>
+      <a href="index.html" id="botonLogout" class="btn-logout">Cerrar sesión</a>
+    </div>
+  </header>
+    <main class="contenedor-principal panel-roles">
+    <section class="titulo-pagina">
+      <h2>Administración de funcionarios</h2>
+      <p>Crea cuentas de funcionarios o da de baja las que ya no se usan.</p>
+    </section>
+    <form id="alta" class="panel-tarjeta">
+      <h2>Alta de funcionario</h2>
+      <label>Documento <input name="documento" required pattern="[0-9]{1,20}"></label>
+      <label>Nombre <input name="nombre" required maxlength="150"></label>
+      <label>Contraseña inicial <input name="clave" type="password" required minlength="8" maxlength="72" autocomplete="off"></label>
+      <button type="submit">Crear cuenta</button>
+    </form>
+    <p id="estado" role="status"></p>
+    <h3>Funcionarios activos</h3>
+    <ul id="registros" class="panel-registros"></ul>
+  </main>
+  <footer class="pie-pagina">
+    <p class="copyright-footer">S.I.G.S.M. · Hospital de Clínicas</p>
+  </footer>
+</body>
+</html>
