@@ -84,9 +84,22 @@
     font-size: 13px;
     border: 1px solid #003d82;
 }
-
-.btn-ver:hover {
+.btn-ver:hover{
     background: #003d82;
+    color: white;
+}
+.btn-reenviar {
+    background: #4d5664;
+    color: #fcfcfc;
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 13px;
+    border: 1px solid #000000;
+    cursor: pointer;
+}
+.btn-reenviar:hover{
+    background: #191c1f;
     color: white;
 }
 
@@ -98,6 +111,7 @@
     border-radius: 5px;
     font-size: 13px;
     border: 1px solid #c2030d;
+    cursor: pointer;
 }
 
 .btn-eliminar:hover {

@@ -35,7 +35,7 @@
         enlace.append(titulo, categoria);
         return enlace;
       }));
-      estado.textContent = documentos.length ? '' : 'No hay documentos disponibles.';
+      estado.textContent = documentos.length ? '' : 'Todavía no hay documentos disponibles.';
       return;
     }
 
@@ -47,11 +47,23 @@
     ficha.replaceChildren(titulo, descripcion);
     ficha.hidden = false;
     if (documento.archivo_url) {
-      const enlace = document.createElement('a');
-      enlace.href = documento.archivo_url;
-      enlace.textContent = 'Abrir PDF';
-      enlace.className = 'btn-enviar';
-      ficha.append(enlace);
+      const leer = document.createElement('a');
+      leer.href = documento.archivo_url;
+      leer.textContent = 'Leer PDF';
+      leer.className = 'btn-enviar';
+
+      const urlDescarga = new URL(leer.href);
+      urlDescarga.searchParams.set('descargar', '1');
+
+      const descargar = document.createElement('a');
+      descargar.href = urlDescarga.href;
+      descargar.textContent = 'Descargar PDF';
+      descargar.className = 'btn-secundario';
+
+      const acciones = document.createElement('div');
+      acciones.className = 'acciones-pdf';
+      acciones.append(leer, descargar);
+      ficha.append(acciones);
     }
     encuesta.href = '../Pacientes/Encuesta.html?servicio=' + encodeURIComponent(documento.categoria_nombre)
       + '&documento_id=' + encodeURIComponent(documento.id);

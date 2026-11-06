@@ -13,6 +13,7 @@
   const docPeso = document.querySelector('#docPeso');
   const enlaceDescarga = document.querySelector('#descargarDocumento');
   const enlaceVista = document.querySelector('#verDocumento');
+  const accionesDocumento = document.querySelector('.acciones-documento');
 
   // Carga un documento específico según el id que llega por la URL
   async function cargarDocumento() {
@@ -43,7 +44,7 @@
       docPeso.textContent = `PDF ${documento.peso_kb} KB`;
 
       // Genera la URL para que el QR lleve a la página de documentos 
-      const urlDocumento = `${window.location.origin}/sigsm/modulo-documentacion/Documentos/documento.html?id=${documento.id}`;
+      const urlDocumento = `${window.location.origin}/sigsm/presentacion/modulo-documentacion/Documentos/documento.html?id=${documento.id}`;
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(urlDocumento)}`;
       if (qrDocumento && documento.estado_revision === 'aprobado') {
         qrDocumento.src = qrUrl;
@@ -53,14 +54,13 @@
         contenedorQr.classList.remove('oculto');
       }
 
-      // Configura los enlaces para ver o descargar el PDF (Que hasta que no sepamos como se hace se va a quedar así)
-      if (enlaceDescarga) {
-        enlaceDescarga.href = documento.archivo_url || '#';
-        enlaceDescarga.classList.toggle('oculto', !documento.archivo_url);
-      }
-      if (enlaceVista) {
-        enlaceVista.href = documento.archivo_url || '#';
-        enlaceVista.classList.toggle('oculto', !documento.archivo_url);
+      if (documento.archivo_url) {
+        const urlPdf = new URL(documento.archivo_url, window.location.href);
+        enlaceVista.href = urlPdf.href;
+
+        urlPdf.searchParams.set('descargar', '1');
+        enlaceDescarga.href = urlPdf.href;
+        accionesDocumento.classList.remove('oculto');
       }
 
       estadoDocumento.textContent = '';

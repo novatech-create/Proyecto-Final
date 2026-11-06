@@ -114,18 +114,6 @@
     gap: 10px;
     margin-top: 16px;
 }
-@media (max-width: 768px) {
-
-    .estadisticas {
-        flex-direction: column;
-    }
-
-    .encabezado-seguimiento {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-}
 
 .historial-traslados {
     margin-top: 28px;
@@ -179,4 +167,17 @@
 .historial-traslados td {
     line-height: 1.45;
     vertical-align: top;
+}
+
+@media (max-width: 768px) {
+
+    .estadisticas {
+        flex-direction: column;
+    }
+
+    .encabezado-seguimiento {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
 }

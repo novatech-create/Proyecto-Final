@@ -10,6 +10,8 @@
   const campoCategoria = document.querySelector('#campoCategoria');
   const botonCancelarDocumento = document.querySelector('#botonCancelarDocumento');
   const mensajeFormularioDocumento = document.querySelector('#mensajeFormularioDocumento');
+  const campoPdf = document.querySelector('#campoPdf');
+  const ayudaPdf = document.querySelector('#ayudaPdf');
 
   let documentoEnEdicion = null;
   let documentosPorId = new Map();
@@ -128,12 +130,22 @@
     mensajeFormularioDocumento.classList.remove('visible');
     mensajeFormularioDocumento.textContent = '';
     formularioNuevoDocumento.reset();
+
+    const conservarPdf = Boolean(documento?.archivo_url);
+
+    campoPdf.required = !conservarPdf;
+    ayudaPdf.textContent = conservarPdf
+      ? 'Si dejas este campo vacío, se conservará el PDF anterior.'
+      : 'Selecciona un PDF de hasta 10 MB.';
+
     if (documento) {
       campoCategoria.value = documento.categoriaId;
-      for (const campo of ['titulo', 'especialista', 'descripcion', 'archivo_url']) {
-        formularioNuevoDocumento.elements.namedItem(campo).value = documento[campo === 'archivo_url' ? 'archivo_origen' : campo];
+
+      for (const campo of ['titulo', 'especialista', 'descripcion']) {
+        formularioNuevoDocumento.elements.namedItem(campo).value = documento[campo];
       }
     }
+
     modalNuevoDocumento.classList.remove('oculto');
   }
 
@@ -163,43 +175,16 @@
     if (!formularioNuevoDocumento.reportValidity()) return;
 
     const datos = new FormData(formularioNuevoDocumento);
-    const titulo = String(datos.get('titulo') || '').trim();
-    const especialista = String(datos.get('especialista') || '').trim();
-    const descripcion = String(datos.get('descripcion') || '').trim();
-    const archivoUrl = String(datos.get('archivo_url') || '').trim();
-    let enlaceWebValido = false;
-    try {
-      const url = new URL(archivoUrl);
-      enlaceWebValido = ['http:', 'https:'].includes(url.protocol)
-        && url.pathname.toLowerCase().endsWith('.pdf');
-    } catch {
-      enlaceWebValido = false;
-    }
-    const enlaceLocalValido = /^(\.\.\/Archivos\/)?[A-Za-z0-9_.%-]+\.pdf$/i.test(archivoUrl);
-    const enlaceValido = !archivoUrl || enlaceWebValido || enlaceLocalValido;
+    const accion = documentoEnEdicion ? 'reenviar' : 'create';
 
-    if (!titulo || titulo.length > 200 || !especialista || especialista.length > 160
-      || !descripcion || descripcion.length > 10000 || archivoUrl.length > 255 || !enlaceValido
-    ) {
-      mensajeFormularioDocumento.textContent = 'Revise los campos: texto obligatorio, límites de longitud y enlace PDF válido.';
-      mensajeFormularioDocumento.classList.add('visible');
-      return;
+    if (documentoEnEdicion) {
+      datos.set('id', documentoEnEdicion.id);
     }
 
     try {
-      const respuesta = await fetch(`${API_BASE}/documentos.php?action=${documentoEnEdicion ? "reenviar" : "create"}`, {
+      const respuesta = await fetch(`${API_BASE}/documentos.php?action=${accion}`, {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: documentoEnEdicion?.id,
-          peso_kb: documentoEnEdicion?.peso_kb ?? 0,
-          categoria_id: datos.get('categoria_id'),
-          titulo,
-          especialista,
-          descripcion,
-          archivo_url: archivoUrl,
-        }),
+        body: datos,
       });
       const resultado = await respuesta.json();
 

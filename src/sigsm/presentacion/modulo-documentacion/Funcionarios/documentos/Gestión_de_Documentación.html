@@ -46,7 +46,7 @@
 
         <!-- Formulario de alta de documento (oculto hasta darle a "Nuevo Documento") -->
         <div id="modalNuevoDocumento" class="modal-documento oculto">
-            <form id="formularioNuevoDocumento" class="tarjeta-formulario">
+            <form id="formularioNuevoDocumento" class="tarjeta-formulario" enctype="multipart/form-data">
                 <h3>Nuevo Documento</h3>
                 <label for="campoCategoria">Categoría</label>
                 <select id="campoCategoria" name="categoria_id" required></select>
@@ -60,8 +60,9 @@
                 <label for="campoDescripcion">Descripción / indicación</label>
                 <textarea id="campoDescripcion" name="descripcion" rows="3" maxlength="10000" required></textarea>
 
-                <label for="campoArchivoUrl">Enlace del archivo</label>
-                <input type="text" id="campoArchivoUrl" name="archivo_url" maxlength="255" placeholder="../Archivos/ejemplo.pdf">
+                <label for="campoPdf">Archivo PDF</label>
+                <input type="file" id="campoPdf" name="pdf" accept=".pdf,application/pdf" aria-describedby="ayudaPdf" required>
+                <small id="ayudaPdf">Selecciona un PDF de hasta 10 MB</small>
 
                 <p id="mensajeFormularioDocumento" class="mensaje-error" role="alert"></p>
 

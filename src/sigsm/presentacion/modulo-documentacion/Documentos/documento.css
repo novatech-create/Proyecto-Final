@@ -1,0 +1,146 @@
+.contenedor {
+  width: min(1100px, 92%);
+  margin: 32px auto 40px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.contenedor [hidden],
+#estadoDocumentos:empty,
+.grid-documentos:empty {
+  display: none;
+}
+
+#tituloPagina {
+  color: #003d82;
+  font-size: clamp(1.65rem, 5vw, 2.4rem);
+  text-align: center;
+}
+
+.subtitulo,
+.estado {
+  color: #46566a;
+  font-size: 18px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.grid-documentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 16px;
+}
+
+.tarjeta-documento,
+.ficha-documento {
+  min-width: 0;
+  padding: clamp(18px, 4vw, 28px);
+  background: #fff;
+  border: 1px solid #d9e1ea;
+  border-radius: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-documento {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  min-height: 100px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px #00000011;
+}
+
+.tarjeta-documento:hover {
+  border-color: #003d82;
+  box-shadow: 0 4px 10px #00000011;
+}
+
+.tarjeta-documento-titulo,
+.ficha-documento h3 {
+  color: #003d82;
+  font-weight: bold;
+}
+
+.tarjeta-documento-titulo,
+.ficha-documento p {
+  font-size: 18px;
+}
+
+.tarjeta-documento-subtitulo {
+  padding: 2px 10px;
+  border-radius: 5px;
+  background: #edf3fa;
+  color: #344b66;
+  font-size: 16px;
+}
+
+.ficha-documento {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+
+.ficha-documento h3 {
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+}
+
+#volverCatalogo {
+  justify-self: start;
+}
+
+.btn-secundario,
+.acciones-pdf .btn-enviar {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid #003d82;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.btn-secundario {
+  color: #003d82;
+  background: #fff;
+}
+
+.btn-secundario:hover {
+  background: #edf3fa;
+}
+
+.contenedor a:focus-visible {
+  outline: 3px solid #003d82;
+  outline-offset: 4px;
+}
+
+.acciones-pdf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.encuesta-banner {
+  padding: 18px 22px;
+  text-align: left;
+}
+
+.encuesta-banner-texto {
+  display: grid;
+  gap: 4px;
+  line-height: 1.5;
+}
+
+.encuesta-banner-texto strong {
+  font-size: 18px;
+}
+
+.encuesta-banner-texto span {
+  font-size: 16px;
+}

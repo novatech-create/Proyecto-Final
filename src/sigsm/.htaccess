@@ -1,0 +1,10 @@
+Options -Indexes
+RewriteEngine On
+
+# Archivos internos accesibles ?nicamente desde PHP.
+RewriteRule ^(?:datos|negocio|bd|output)(?:/|$) - [F,NC]
+
+# Los marcadores anteriores y los QR conservan sus par?metros de consulta.
+RewriteRule ^$ /sigsm/presentacion/autenticacion/index.html [R=302,L]
+RewriteRule ^modulo-documentacion/documentos/documento\.html$ /sigsm/presentacion/modulo-documentacion/Documentos/documento.html [R=302,L,NC]
+RewriteRule ^(autenticacion|modulo-documentacion|modulo-ambulancias|imagenes)(/.*)?$ /sigsm/presentacion/$1$2 [R=302,L]

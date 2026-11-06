@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../datos/UsuarioDAO.php';
+
 const DURACION_SESION = 30 * 24 * 60 * 60;
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -44,13 +46,7 @@ function exigirRol(array $rolesPermitidos): void
     }
 
     try {
-        require_once __DIR__ . '/conexion.php';
-        $conexion = obtenerConexion();
-        $consulta = $conexion->prepare(
-            'SELECT nombre, rol, activo FROM usuarios WHERE id = :id LIMIT 1'
-        );
-        $consulta->execute(['id' => $_SESSION['usuario_id']]);
-        $usuarioActual = $consulta->fetch();
+        $usuarioActual = (new UsuarioDAO())->buscarPerfil((int)$_SESSION['usuario_id']);
     } catch (Throwable $error) {
         responder(['success' => false, 'message' => 'No se pudo verificar el perfil.'], 503);
     }
