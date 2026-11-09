@@ -1,6 +1,8 @@
 (function () {
   // Ruta base de la API del sistema
   const API_BASE = '/sigsm/api';
+  const LIMITE_PDF_BYTES = 10 * 1024 * 1024;
+  const MENSAJE_PDF_GRANDE = 'El PDF supera los 10 MB.';
 
   const estadoDocumentos = document.querySelector('#estadoDocumentos');
   const contenedorCategorias = document.querySelector('#contenedorCategorias');
@@ -174,6 +176,14 @@
     evento.preventDefault();
     if (!formularioNuevoDocumento.reportValidity()) return;
 
+    mensajeFormularioDocumento.classList.remove('visible');
+    const archivo = campoPdf.files[0];
+    if (archivo && archivo.size > LIMITE_PDF_BYTES) {
+      mensajeFormularioDocumento.textContent = MENSAJE_PDF_GRANDE;
+      mensajeFormularioDocumento.classList.add('visible');
+      return;
+    }
+
     const datos = new FormData(formularioNuevoDocumento);
     const accion = documentoEnEdicion ? 'reenviar' : 'create';
 
@@ -186,10 +196,13 @@
         method: 'POST',
         body: datos,
       });
-      const resultado = await respuesta.json();
+      if (respuesta.status === 413) {
+        throw new Error(MENSAJE_PDF_GRANDE);
+      }
+      const resultado = await respuesta.json().catch(() => null);
 
-      if (!respuesta.ok || !resultado.success) {
-        throw new Error(resultado.message || 'No se pudo guardar el documento.');
+      if (!respuesta.ok || !resultado?.success) {
+        throw new Error(resultado?.message || 'No se pudo guardar el documento.');
       }
 
       // Si se guarda correctamente, cierra el modal y recarga la lista

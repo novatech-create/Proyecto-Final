@@ -1,4 +1,6 @@
-CREATE DATABASE sigsm1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET NAMES utf8mb4;
+
+ALTER DATABASE sigsm1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE sigsm1;
 
 -- Usuarios, documentación y encuestas.
@@ -198,13 +200,13 @@ CREATE TABLE sigsm1.FUNCIONARIO_CUENTA (
         ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Datos de demostración. Los documentos deben revisarse antes de publicarse.
--- Funcionarios de prueba: 11111111, 22222222, 33333333. Clave: SigsmFunc!84Demo
+-- Datos de prueba
+-- Funcionarios de prueba: 111111111, 222222222, 333333333 con la contraseña SigsmFunc!84Demo
 START TRANSACTION;
 INSERT INTO usuarios (documento, nombre, clave, rol) VALUES
-('11111111', 'Sujeto1 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario'),
-('22222222', 'Sujeto2 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario'),
-('33333333', 'Sujeto3 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario');
+('111111111', 'Sujeto1 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario'),
+('222222222', 'Sujeto2 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario'),
+('333333333', 'Sujeto3 Documentación', '$2y$12$3PcE1S1en16RAaxjqtZ8YOHiPfiomyJMYv8zFY1f00QjHWPtg4zn2', 'funcionario');
 
 INSERT INTO categorias_documentos (nombre) VALUES
 ('Nefrología'),
@@ -318,14 +320,13 @@ INSERT INTO encuestas (documento_id, servicio, calificacion_info, datosSatisfacc
 (10, 'Neurología', 'Mala', 1, 'No', 'Nada util', 'La información no fue suficiente para comprender el procedimiento.'),
 (6, 'Cardiología', 'Regular', 3, 'Parcialmente', 'Util', 'El documento podría incluir una explicación más detallada.');
 
--- Cuentas adicionales de prueba.
-
--- administrador | documento: 990000001 | contraseña: SigsmAdmin!84Demo
--- medico | documento: 990000002 | contraseña: SigsmMedico!72Demo
+-- Cuentas nuevas de prueba
+-- administrador | documento: 999999999 | contraseña: SigsmAdmin!84Demo
+-- medico | documento: 888888888 | contraseña: SigsmMedico!72Demo
 
 INSERT INTO usuarios (documento, nombre, clave, rol, activo) VALUES
-  ('990000001', 'Administrador de prueba', '$2y$12$8Pdm/9g6TSVoFFJ28jktyOHqYA6zlpu12tcJgL10lQT4xzUiuV8ky', 'administrador', 1),
-  ('990000002', 'Medico de prueba', '$2y$12$yMsW6i2OgIUOhjGxDv1sOe4iX2PRJ2tfIHiBUc/5lKoWUA7sTUW76', 'medico', 1);
+  ('999999999', 'Administrador de prueba', '$2y$12$8Pdm/9g6TSVoFFJ28jktyOHqYA6zlpu12tcJgL10lQT4xzUiuV8ky', 'administrador', 1),
+  ('888888888', 'Medico de prueba', '$2y$12$yMsW6i2OgIUOhjGxDv1sOe4iX2PRJ2tfIHiBUc/5lKoWUA7sTUW76', 'medico', 1);
 
 INSERT INTO FUNCIONARIO (Nombre)
 SELECT datos.Nombre
@@ -384,22 +385,3 @@ WHERE NOT EXISTS (
     WHERE PuntoOrigen = 'Emergencia (demo)' AND PuntoDestino = 'Centro de diagnóstico (demo)'
 );
 COMMIT;
-
--- Cuenta local de PHP.
-CREATE USER IF NOT EXISTS 'sigsm_app'@'127.0.0.1' IDENTIFIED BY 'CAMBIAR_CLAVE_MYSQL';
-GRANT SELECT, INSERT, UPDATE (clave, activo) ON sigsm1.usuarios TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.categorias_documentos TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.documentos TO 'sigsm_app'@'127.0.0.1';
-GRANT INSERT ON sigsm1.encuestas TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.vw_encuestas_detalle TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.vw_encuestas_resumen TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.FUNCIONARIO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, DELETE ON sigsm1.FUNCIONARIO_CUENTA TO 'sigsm_app'@'127.0.0.1';
-GRANT INSERT ON sigsm1.TELEFONOS TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.CHOFER TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.ENFERMERO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.MEDICO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.VEHICULO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.RUTA TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.ELEMENTOTRASLADADO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.TRASLADO TO 'sigsm_app'@'127.0.0.1';

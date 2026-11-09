@@ -8,7 +8,10 @@ function obtenerConexion(): PDO
     $port = getenv('DB_PORT') ?: '3306';
     $database = getenv('DB_NAME') ?: 'sigsm1';
     $username = getenv('DB_USER') ?: 'sigsm_app';
-    $password = getenv('DB_PASSWORD') ?: '3747eedda426c2821890a7fa485c748375cfb636e347159b658092a7561710f9';
+    $password = getenv('DB_PASSWORD');
+    if ($password === false || $password === '') {
+        throw new RuntimeException('Configura DB_PASSWORD antes de conectar SIGSM.');
+    }
     $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
 
     // Se crea una nueva PDO para conectarse a la base de datos con las credenciales y opciones puestas
