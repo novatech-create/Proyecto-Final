@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+bd/
+output/
+tmp/
+docker/mysql/
+Archivos/*
+!Archivos/.htaccess

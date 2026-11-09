@@ -1,4 +1,6 @@
-CREATE DATABASE sigsm1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET NAMES utf8mb4;
+
+ALTER DATABASE sigsm1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE sigsm1;
 
 -- Usuarios, documentación y encuestas.
@@ -383,22 +385,3 @@ WHERE NOT EXISTS (
     WHERE PuntoOrigen = 'Emergencia (demo)' AND PuntoDestino = 'Centro de diagnóstico (demo)'
 );
 COMMIT;
-
--- Cuenta local de PHP.
-CREATE USER IF NOT EXISTS 'sigsm_app'@'127.0.0.1' IDENTIFIED BY 'CAMBIAR_CLAVE_MYSQL';
-GRANT SELECT, INSERT, UPDATE (clave, activo) ON sigsm1.usuarios TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.categorias_documentos TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.documentos TO 'sigsm_app'@'127.0.0.1';
-GRANT INSERT ON sigsm1.encuestas TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.vw_encuestas_detalle TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT ON sigsm1.vw_encuestas_resumen TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.FUNCIONARIO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, DELETE ON sigsm1.FUNCIONARIO_CUENTA TO 'sigsm_app'@'127.0.0.1';
-GRANT INSERT ON sigsm1.TELEFONOS TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.CHOFER TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.ENFERMERO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.MEDICO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.VEHICULO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.RUTA TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT ON sigsm1.ELEMENTOTRASLADADO TO 'sigsm_app'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE ON sigsm1.TRASLADO TO 'sigsm_app'@'127.0.0.1';

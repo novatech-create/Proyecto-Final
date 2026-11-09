@@ -5,7 +5,7 @@ final class ErrorPdf extends DomainException {}
 
 function carpetaPdf(): string
 {
-    return getenv('SIGSM_PDF_DIR') ?: 'C:/xampp/sigsm-pdfs';
+    return getenv('SIGSM_PDF_DIR') ?: __DIR__ . '/../Archivos';
 }
 
 function esPdfSubido(string $nombre): bool

@@ -1,0 +1,50 @@
+name: sigsm
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8000}:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: sigsm1
+      DB_USER: sigsm_app
+      DB_PASSWORD: "${DB_PASSWORD:?Completa DB_PASSWORD en .env}"
+      SIGSM_PDF_DIR: /var/www/html/sigsm/Archivos
+    volumes:
+      - pdfs:/var/www/html/sigsm/Archivos
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sigsm1
+      MYSQL_USER: sigsm_app
+      MYSQL_PASSWORD: "${DB_PASSWORD:?Completa DB_PASSWORD en .env}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:?Completa MYSQL_ROOT_PASSWORD en .env}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - type: bind
+        source: ./docker/mysql/BDProyecto.sql
+        target: /docker-entrypoint-initdb.d/BDProyecto.sql
+        read_only: true
+        bind:
+          create_host_path: false
+          selinux: Z
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP -h 127.0.0.1 -u "$$MYSQL_USER" "$$MYSQL_DATABASE" -e "SELECT 1 FROM documentos LIMIT 1" >/dev/null'
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  mysql_data:
+  pdfs:
