@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.S.M. - Traslados Activos</title>
+    <link rel="stylesheet" href="compartido.css">
+    <link rel="stylesheet" href="Panel_traslados_activos.css?v=20261020-2">
+    <script src="../../autenticacion/sesion.js" defer></script>
+    <script src="traslados_activos.js" defer></script>
+</head>
+<body data-roles="funcionario" data-login-url="../../autenticacion/index.html">
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <div class="logo-header">
+            <img src="../../imagenes/Logo_Hc.jpg" alt="Hospital de Clínicas" class="logo-hc">
+            <div class="titulo-header">
+                <h1>S.I.G.S.M.</h1>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+            </div>
+        </div>
+        <div class="info-usuario">
+            <span id="nombreUsuario">Usuario</span>
+            <a href="../../autenticacion/index.html" id="botonLogout" class="btn-logout">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <!-- Contenido -->
+    <main class="contenedor-principal">
+        <section class="titulo">
+            <div class="encabezado-seguimiento">
+                <div>
+                    <h2>Traslados Activos</h2>
+                    <p>Seguimiento del estado de cada traslado en curso.</p>
+                </div>
+                <a class="btn-accion" href="Formulario_traslado.html">+ Nuevo traslado</a>
+            </div>
+        </section>
+        <section class="estadisticas">
+            <div class="tarjeta">
+                <h3 id="totalActivos">-</h3>
+                <p>Total activos</p>
+            </div>
+            <div class="tarjeta">
+                <h3 id="totalAlta">-</h3>
+                <p>Solicitudes pendientes</p>
+            </div>
+            <div class="tarjeta">
+                <h3 id="ultimaActualizacion">-</h3>
+                <p>Próxima llegada estimada</p>
+            </div>
+        </section>
+        <p id="estadoTraslados" class="estado-carga" role="status">Cargando traslados...</p>
+        <section class="lista-traslados" id="listaTraslados"></section>
+
+        <section class="historial-traslados">
+            <div class="historial-titulo">
+                <h2>Traslados recientes finalizados o cancelados</h2>
+            </div>
+            <div id="historialTraslados"></div>
+        </section>
+
+        <a href="../gestion-traslados/Monitoreo_General_Ambulancias.html" id="volver-panel" class="btn-accion">Volver al monitoreo</a>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="informacion-footer">
+                <h4>S.I.G.S.M.</h4>
+                <p>Sistema Informático de Gestión de Servicios Médicos</p>
+                <p>Hospital de Clínicas - Montevideo, Uruguay</p>
+            </div>
+            <div class="datos-proyecto-footer">
+                <h4>Proyecto de Egreso 2026</h4>
+                <p>BT - Tecnologías de la Información</p>
+            </div>
+        </div>
+        <div class="copyright-footer">
+            <p>© 2026 - S.I.G.S.M. - Hospital de Clínicas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+
+

@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
 
-// Sesión compartida por todos (login, rol activo, etc.)
+require_once __DIR__ . '/../datos/UsuarioDAO.php';
+
+const DURACION_SESION = 30 * 24 * 60 * 60;
+
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    session_start([
+        'use_strict_mode' => 1,
+        'use_only_cookies' => 1,
+        'gc_maxlifetime' => DURACION_SESION,
+        'cookie_lifetime' => DURACION_SESION,
+        'cookie_path' => '/sigsm/',
+        'cookie_httponly' => true,
+        'cookie_samesite' => 'Lax',
+        'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    ]);
 }
 
-// CORS: permite que el frontend pueda llamar a la API y mantener la sesión
-$origen = $_SERVER['HTTP_ORIGIN'] ?? '*';
-header("Access-Control-Allow-Origin: {$origen}");
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
-
 // Envía una respuesta JSON y termina la ejecución.
 function responder(array $payload, int $codigo = 200): void
 {
@@ -44,7 +44,21 @@ function exigirRol(array $rolesPermitidos): void
     if (!isset($_SESSION['usuario_id'])) {
         responder(['success' => false, 'message' => 'Debe iniciar sesión.'], 401);
     }
-    if (!in_array($_SESSION['rol'], $rolesPermitidos, true)) {
+
+    try {
+        $usuarioActual = (new UsuarioDAO())->buscarPerfil((int)$_SESSION['usuario_id']);
+    } catch (Throwable $error) {
+        responder(['success' => false, 'message' => 'No se pudo verificar el perfil.'], 503);
+    }
+
+    if (!$usuarioActual || (int)$usuarioActual['activo'] !== 1) {
+        $_SESSION = [];
+        responder(['success' => false, 'message' => 'La cuenta no está activa.'], 401);
+    }
+
+    $_SESSION['nombre'] = $usuarioActual['nombre'];
+    $_SESSION['rol'] = $usuarioActual['rol'];
+    if (!in_array($usuarioActual['rol'], $rolesPermitidos, true)) {
         responder(['success' => false, 'message' => 'No tiene permisos para esta acción.'], 403);
     }
 }

@@ -1,0 +1,14 @@
+Options -Indexes
+RewriteEngine On
+
+<FilesMatch "^\.env(?:\.|$)">
+    Require all denied
+</FilesMatch>
+
+# Archivos internos accesibles únicamente desde PHP.
+RewriteRule ^(?:datos|negocio|bd|docker|output|tmp)(?:/|$) - [F,NC]
+
+# Los marcadores anteriores y los QR conservan sus parámetros de consulta
+RewriteRule ^$ /sigsm/presentacion/autenticacion/index.html [R=302,L]
+RewriteRule ^modulo-documentacion/documentos/documento\.html$ /sigsm/presentacion/modulo-documentacion/Documentos/documento.html [R=302,L,NC]
+RewriteRule ^(autenticacion|modulo-documentacion|modulo-ambulancias|imagenes)(/.*)?$ /sigsm/presentacion/$1$2 [R=302,L]
